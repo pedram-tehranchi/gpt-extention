@@ -57,8 +57,17 @@ export function initTemplateTrigger(): () => void {
     picker.updateTemplates(filtered);
   };
 
+  const NAVIGATION_KEYS = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+
   const bindTextarea = (textarea: HTMLElement): (() => void) => {
     const onInput = (): void => {
+      void syncPicker(textarea);
+    };
+
+    const onKeyUp = (event: KeyboardEvent): void => {
+      if (NAVIGATION_KEYS.has(event.key)) {
+        return;
+      }
       void syncPicker(textarea);
     };
 
@@ -72,14 +81,14 @@ export function initTemplateTrigger(): () => void {
     };
 
     textarea.addEventListener('input', onInput);
-    textarea.addEventListener('keyup', onInput);
+    textarea.addEventListener('keyup', onKeyUp);
     textarea.addEventListener('blur', onBlur);
 
     logger.info('Template trigger bound to composer');
 
     return () => {
       textarea.removeEventListener('input', onInput);
-      textarea.removeEventListener('keyup', onInput);
+      textarea.removeEventListener('keyup', onKeyUp);
       textarea.removeEventListener('blur', onBlur);
       dismissPicker();
     };

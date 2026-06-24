@@ -52,8 +52,18 @@ export class TemplatePicker {
   }
 
   updateTemplates(templates: Template[]): void {
+    const listUnchanged =
+      this.templates.length === templates.length &&
+      this.templates.every((template, index) => template.id === templates[index]?.id);
+
     this.templates = templates;
-    this.activeIndex = 0;
+
+    if (!listUnchanged) {
+      this.activeIndex = 0;
+    } else {
+      this.activeIndex = Math.min(this.activeIndex, Math.max(templates.length - 1, 0));
+    }
+
     this.render();
     this.position();
   }
