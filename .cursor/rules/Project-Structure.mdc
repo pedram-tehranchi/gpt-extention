@@ -1,0 +1,42 @@
+---
+alwaysApply: true
+---
+
+Structure
+extension/
+├── public/
+│   ├── icons/
+│   └── manifest.json
+├── src/
+│   ├── background/      # Service worker
+│   ├── content/         # Scripts injected into webpages
+│   ├── popup/           # Extension popup UI
+│   ├── options/         # Settings page
+│   ├── components/      # Reusable UI
+│   ├── services/        # Chrome APIs, storage, HTTP
+│   ├── utils/
+│   ├── types/
+│   └── styles/
+├── tests/
+├── package.json
+├── tsconfig.json
+└── README.md
+
+
+
+# Chrome Extension Structure
+
+Build Chrome extensions using Manifest V3 and TypeScript.
+
+* Put the manifest and static assets in `public/`.
+* Put background service-worker logic in `src/background/`.
+* Put webpage-injected code in `src/content/`.
+* Put popup and options interfaces in their respective folders.
+* Keep Chrome API access, storage, messaging, and HTTP logic inside `src/services/`.
+* Keep reusable UI in `src/components/`.
+* Keep shared types and utilities separate.
+* Do not mix UI, business logic, and Chrome API logic.
+* Use message passing between background, content scripts, and extension pages.
+* Request only necessary permissions.
+* Never use remotely hosted executable code.
+* Add new folders only when a feature clearly requires them.
