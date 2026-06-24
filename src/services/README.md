@@ -8,6 +8,8 @@ Chrome API wrappers — storage, messaging, and future HTTP/API clients.
 
 * `messaging.ts`: Typed `sendMessage` / `onMessage` helpers
 * `storage.ts`: `chrome.storage.local` read/write helpers
+* `settings.ts`: Extension settings (title prefix)
+* `templates.ts`: Template CRUD for `//` slash commands
 
 ## Rules
 

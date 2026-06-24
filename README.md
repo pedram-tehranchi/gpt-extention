@@ -37,8 +37,9 @@ npm run build   # production build
 
 - **Background** handles messages and storage.
 - **Popup / options** are vanilla TypeScript pages (no framework).
-- **Content scripts** are ready but not registered — add a `content_scripts` block to `public/manifest.json` when needed.
-- Communication uses typed messages via `src/services/messaging.ts`.
+- **Content scripts** run on ChatGPT (`chatgpt.com`) — title banner + `//` template picker
+- Communication uses typed messages via `src/services/messaging.ts`
+- Templates and settings are managed on the options page
 
 ## Scripts
 

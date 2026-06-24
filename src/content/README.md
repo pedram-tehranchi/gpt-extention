@@ -2,22 +2,26 @@
 
 ## Purpose
 
-Scripts injected into web pages.
+Content scripts injected into supported websites.
 
 ## Contains
 
-* `index.ts`: Content script entry (logs on load).
+* `index.ts`: Bootstraps the matching site adapter from the registry
+* `sites/registry.ts`: Site matcher registry
+* `sites/chatgpt/`: ChatGPT-specific features (title banner, template trigger)
 
 ## Rules
 
-* Not registered in `manifest.json` yet — add `content_scripts` when you need page injection.
-* Never import popup/options code; share logic via `src/services/` and `src/types/`.
-* Request host permissions only for URLs you actually need.
+* Keep site-specific DOM logic inside `sites/<site>/`.
+* Share storage, types, and UI through `src/services/`, `src/types/`, and `src/components/`.
+* Register new sites in `sites/registry.ts` and manifest `content_scripts`.
 
 ## Connections
 
-* Can send messages to the background worker via `src/services/messaging.ts`.
+* Activated by manifest on `https://chatgpt.com/*`
+* Uses `src/services/templates.ts`, `src/services/settings.ts`
+* Renders UI via `src/components/`
 
 ## Update rule
 
-Update this README when content script scope or manifest registration changes.
+Update this README when site adapters or content script entry behavior changes.

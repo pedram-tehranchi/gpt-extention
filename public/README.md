@@ -13,6 +13,7 @@ Static assets shipped with the extension: manifest and icons.
 
 * Do not put executable TypeScript here — source lives in `src/`.
 * Keep permissions minimal; add new ones only when a feature requires them.
+* `host_permissions` currently scoped to `https://chatgpt.com/*`.
 
 ## Connections
 

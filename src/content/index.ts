@@ -1,7 +1,12 @@
-/**
- * Content script entry point.
- * Not registered in manifest yet — add a content_scripts block when you need page injection.
- */
+import { getMatchingAdapter } from '@/content/sites/registry';
 import { logger } from '@/utils/logger';
 
-logger.info('Content script loaded', { url: window.location.href });
+const adapter = getMatchingAdapter();
+
+if (adapter) {
+  const cleanup = adapter.init();
+  window.addEventListener('pagehide', cleanup);
+  logger.info('Content script active', { site: adapter.id });
+} else {
+  logger.info('No site adapter matched', { url: window.location.href });
+}
