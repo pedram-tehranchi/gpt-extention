@@ -1,4 +1,4 @@
-export type MessageType = 'PING' | 'GET_STORAGE' | 'SET_STORAGE';
+export type MessageType = 'PING';
 
 export interface ExtensionMessage<T = unknown> {
   type: MessageType;
@@ -9,9 +9,4 @@ export interface ExtensionResponse<T = unknown> {
   ok: boolean;
   data?: T;
   error?: string;
-}
-
-export interface StoragePayload {
-  key: string;
-  value?: unknown;
 }
