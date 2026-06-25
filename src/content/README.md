@@ -8,7 +8,7 @@ Content scripts injected into supported websites.
 
 * `index.ts`: Bootstraps the matching site adapter from the registry
 * `sites/registry.ts`: Site matcher registry
-* `sites/chatgpt/`: ChatGPT-specific features (title banner, template trigger)
+* `sites/chatgpt/`: ChatGPT-specific features (title banner, template trigger, auto allow)
 
 ## Rules
 

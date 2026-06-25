@@ -1,3 +1,4 @@
+import { initAutoAllowToggle } from '@/content/sites/chatgpt/autoAllow';
 import { initTemplateTrigger } from '@/content/sites/chatgpt/templateTrigger';
 import { initTitleBanner } from '@/content/sites/chatgpt/titleBanner';
 import { queryPromptTextarea } from '@/content/sites/chatgpt/selectors';
@@ -51,7 +52,7 @@ export const chatgptAdapter: SiteAdapter = {
         return;
       }
 
-      cleanups = [initTitleBanner(), initTemplateTrigger()];
+      cleanups = [initTitleBanner(), initTemplateTrigger(), initAutoAllowToggle()];
       logger.info('ChatGPT adapter initialized');
     });
 

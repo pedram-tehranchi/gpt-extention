@@ -35,7 +35,9 @@ async function loadSettings(): Promise<void> {
 }
 
 async function handleSaveSettings(): Promise<void> {
+  const current = await getSettings();
   await saveSettings({
+    ...current,
     titlePrefixToRemove: titlePrefixInput.value,
   });
   showSettingsStatus('Settings saved');

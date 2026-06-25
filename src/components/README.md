@@ -8,6 +8,7 @@ Reusable UI injected into web pages via Shadow DOM.
 
 * `ConversationTitle.ts`: Fixed title banner for conversation pages
 * `TemplatePicker.ts`: Dropdown for `//` template selection
+* `AutoAllowToggle.ts`: Composer toggle for auto-clicking Allow prompts
 
 ## Rules
 
