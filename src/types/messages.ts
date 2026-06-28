@@ -1,4 +1,4 @@
-export type MessageType = 'PING';
+export type MessageType = 'PING' | 'GET_SETTINGS' | 'SAVE_SETTINGS' | 'GET_TEMPLATES';
 
 export interface ExtensionMessage<T = unknown> {
   type: MessageType;

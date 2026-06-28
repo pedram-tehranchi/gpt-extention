@@ -1,5 +1,5 @@
 import contentStyles from '@/styles/content.css?inline';
-import { getSettings, saveSettings } from '@/services/settings';
+import { getSettings, saveSettings } from '@/services/extensionClient';
 
 export class AutoAllowToggle {
   private readonly host: HTMLElement;

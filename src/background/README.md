@@ -6,7 +6,7 @@ Manifest V3 service worker — long-lived extension logic, message routing, and 
 
 ## Contains
 
-* `index.ts`: Entry point; handles `PING` messages from the popup.
+* `index.ts`: Entry point; handles data requests from content scripts and popup.
 
 ## Rules
 

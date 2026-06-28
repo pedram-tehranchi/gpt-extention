@@ -1,5 +1,5 @@
 import { ConversationTitle } from '@/components/ConversationTitle';
-import { getSettings } from '@/services/settings';
+import { getSettings } from '@/services/extensionClient';
 import { formatConversationTitle } from '@/utils/tabTitle';
 import { logger } from '@/utils/logger';
 

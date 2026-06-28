@@ -7,13 +7,18 @@ import {
 
 describe('parseTemplateTrigger', () => {
   it('detects // at start of input', () => {
-    expect(parseTemplateTrigger('//')).toEqual({ query: '', triggerLength: 2 });
+    expect(parseTemplateTrigger('//')).toEqual({
+      query: '',
+      triggerLength: 2,
+      triggerText: '//',
+    });
   });
 
   it('detects // with filter text', () => {
     expect(parseTemplateTrigger('hello //prom')).toEqual({
       query: 'prom',
       triggerLength: 6,
+      triggerText: '//prom',
     });
   });
 

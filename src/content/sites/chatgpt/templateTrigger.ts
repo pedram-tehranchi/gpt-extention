@@ -1,7 +1,7 @@
 import { TemplatePicker } from '@/components/TemplatePicker';
 import { observeComposer } from '@/content/sites/chatgpt/observeComposer';
 import { queryPromptHeader } from '@/content/sites/chatgpt/selectors';
-import { getTemplates } from '@/services/templates';
+import { getTemplates } from '@/services/extensionClient';
 import type { Template } from '@/types/template';
 import { getTextBeforeCursor, replaceTextBeforeCursor } from '@/utils/contentEditable';
 import { filterTemplatesByQuery, parseTemplateTrigger } from '@/utils/templateTrigger';
@@ -10,21 +10,29 @@ import { logger } from '@/utils/logger';
 export function initTemplateTrigger(): () => void {
   let picker: TemplatePicker | null = null;
   let activeTextarea: HTMLElement | null = null;
-  let activeTriggerLength = 0;
+  let activeTriggerText = '';
+  let savedCaretRange: Range | null = null;
 
   const dismissPicker = (): void => {
     picker?.hide();
     picker = null;
-    activeTriggerLength = 0;
+    activeTriggerText = '';
+    savedCaretRange = null;
   };
 
   const handleSelect = (template: Template): void => {
-    if (!activeTextarea || activeTriggerLength === 0) {
+    if (!activeTextarea || !activeTriggerText) {
       dismissPicker();
       return;
     }
 
-    replaceTextBeforeCursor(activeTextarea, activeTriggerLength, template.content);
+    activeTextarea.focus();
+    replaceTextBeforeCursor(
+      activeTextarea,
+      activeTriggerText,
+      template.content,
+      savedCaretRange,
+    );
     dismissPicker();
   };
 
@@ -38,7 +46,13 @@ export function initTemplateTrigger(): () => void {
       return;
     }
 
-    activeTriggerLength = trigger.triggerLength;
+    activeTriggerText = trigger.triggerText;
+
+    const selection = window.getSelection();
+    if (selection?.rangeCount && textarea.contains(selection.anchorNode)) {
+      savedCaretRange = selection.getRangeAt(0).cloneRange();
+    }
+
     const templates = await getTemplates();
     const filtered = filterTemplatesByQuery(templates, trigger.query);
     const anchor = queryPromptHeader(textarea.closest('form') ?? document) ?? textarea;

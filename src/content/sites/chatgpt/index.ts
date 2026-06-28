@@ -6,7 +6,7 @@ import type { SiteAdapter } from '@/types/site';
 import { logger } from '@/utils/logger';
 
 function isConversationPage(): boolean {
-  if (window.location.pathname.startsWith('/c/')) {
+  if (window.location.pathname.includes('/c/')) {
     return true;
   }
 

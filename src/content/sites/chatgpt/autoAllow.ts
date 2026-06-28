@@ -1,6 +1,6 @@
 import { AutoAllowToggle } from '@/components/AutoAllowToggle';
 import { queryPromptHeader } from '@/content/sites/chatgpt/selectors';
-import { getSettings } from '@/services/settings';
+import { getSettings } from '@/services/extensionClient';
 import {
   collectAllowButtonsFromNode,
   findAllowButtons,

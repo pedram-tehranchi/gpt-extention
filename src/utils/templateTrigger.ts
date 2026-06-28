@@ -1,6 +1,7 @@
 export interface TemplateTriggerMatch {
   query: string;
   triggerLength: number;
+  triggerText: string;
 }
 
 /**
@@ -16,6 +17,7 @@ export function parseTemplateTrigger(textBeforeCursor: string): TemplateTriggerM
   return {
     query: match[2] ?? '',
     triggerLength: match[1].length,
+    triggerText: match[1],
   };
 }
 
