@@ -14,7 +14,7 @@ Reusable UI injected into web pages via Shadow DOM.
 ## Rules
 
 * Use Shadow DOM + `src/styles/content.css` (with extension font faces) to avoid host page CSS conflicts.
-* Prefer constructor options/callbacks for data; settings persistence may use `extensionClient` when the control owns its state.
+* Prefer constructor options/callbacks for data; content-mounted controls that persist settings use `src/content/chromeApi.ts` (not `src/services/*`).
 
 ## Connections
 
