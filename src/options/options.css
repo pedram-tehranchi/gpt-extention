@@ -11,12 +11,12 @@
 .section {
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid var(--surface);
+  border-top: 1px solid var(--border);
 }
 
 .section h2 {
   margin: 0 0 16px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -27,6 +27,16 @@
   margin-bottom: 16px;
 }
 
+.field--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.field--checkbox .field__label {
+  color: var(--text);
+}
+
 .field__label {
   font-size: 13px;
   color: var(--text-muted);
@@ -35,16 +45,26 @@
 .field__input,
 .field__textarea {
   padding: 10px 12px;
-  border: 1px solid #2d3140;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
   font: inherit;
 }
 
+.field__input:focus-visible,
+.field__textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .field__textarea {
   resize: vertical;
   min-height: 120px;
+}
+
+.settings-actions {
+  margin-top: 24px;
 }
 
 .form-actions {
@@ -72,6 +92,7 @@
   padding: 16px;
   border-radius: var(--radius);
   background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .template-item__header {
@@ -105,15 +126,17 @@
 }
 
 button.button-secondary {
-  background: #2d3140;
+  background: var(--border);
+  color: var(--text);
 }
 
 button.button-secondary:hover {
-  background: #3a4054;
+  background: #3a4556;
 }
 
 button.button-danger {
   background: #5c2b2b;
+  color: #fff;
 }
 
 button.button-danger:hover {
@@ -124,5 +147,6 @@ code {
   padding: 2px 6px;
   border-radius: 4px;
   background: var(--surface);
+  border: 1px solid var(--border);
   font-size: 12px;
 }

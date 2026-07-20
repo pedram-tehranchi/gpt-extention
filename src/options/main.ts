@@ -5,9 +5,14 @@ import {
   saveTemplate,
   updateTemplate,
 } from '@/services/templates';
+import { clampKeepLatestTurns } from '@/types/settings';
 import type { Template } from '@/types/template';
 
 const titlePrefixInput = document.getElementById('title-prefix') as HTMLInputElement;
+const titleBannerInput = document.getElementById('title-banner-enabled') as HTMLInputElement;
+const pruneOldTurnsInput = document.getElementById('prune-old-turns') as HTMLInputElement;
+const keepLatestTurnsInput = document.getElementById('keep-latest-turns') as HTMLInputElement;
+const autoAllowInput = document.getElementById('auto-allow-enabled') as HTMLInputElement;
 const saveSettingsBtn = document.getElementById('save-settings') as HTMLButtonElement;
 const settingsStatus = document.getElementById('settings-status') as HTMLParagraphElement;
 
@@ -32,14 +37,24 @@ function showSettingsStatus(message: string): void {
 async function loadSettings(): Promise<void> {
   const settings = await getSettings();
   titlePrefixInput.value = settings.titlePrefixToRemove;
+  titleBannerInput.checked = settings.titleBannerEnabled;
+  pruneOldTurnsInput.checked = settings.pruneOldTurnsEnabled;
+  keepLatestTurnsInput.value = String(settings.keepLatestTurns);
+  autoAllowInput.checked = settings.autoAllowEnabled;
 }
 
 async function handleSaveSettings(): Promise<void> {
   const current = await getSettings();
+  const keepLatestTurns = clampKeepLatestTurns(Number(keepLatestTurnsInput.value));
   await saveSettings({
     ...current,
     titlePrefixToRemove: titlePrefixInput.value,
+    titleBannerEnabled: titleBannerInput.checked,
+    pruneOldTurnsEnabled: pruneOldTurnsInput.checked,
+    keepLatestTurns,
+    autoAllowEnabled: autoAllowInput.checked,
   });
+  keepLatestTurnsInput.value = String(keepLatestTurns);
   showSettingsStatus('Settings saved');
 }
 
@@ -96,12 +111,17 @@ function renderTemplateList(templates: Template[]): void {
     deleteBtn.type = 'button';
     deleteBtn.className = 'button-danger';
     deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', async () => {
-      await deleteTemplate(template.id);
-      if (editingId === template.id) {
-        resetTemplateForm();
-      }
-      await refreshTemplates();
+    deleteBtn.addEventListener('click', () => {
+      void (async () => {
+        if (!window.confirm(`Delete template “${template.name}”?`)) {
+          return;
+        }
+        await deleteTemplate(template.id);
+        if (editingId === template.id) {
+          resetTemplateForm();
+        }
+        await refreshTemplates();
+      })();
     });
 
     actions.append(editBtn, deleteBtn);
@@ -137,6 +157,7 @@ async function handleTemplateSubmit(event: SubmitEvent): Promise<void> {
 
   resetTemplateForm();
   await refreshTemplates();
+  showSettingsStatus('Template saved');
 }
 
 saveSettingsBtn.addEventListener('click', () => {

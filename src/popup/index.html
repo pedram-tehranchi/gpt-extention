@@ -9,10 +9,43 @@
   </head>
   <body>
     <main class="popup">
-      <h1>GPT Extension</h1>
-      <p class="subtitle">Scaffold is ready. Tell me what to build next.</p>
+      <header class="popup__header">
+        <h1>GPT Extension</h1>
+        <p class="subtitle">ChatGPT title, templates, Auto Allow, and memory.</p>
+      </header>
+
       <p id="status" class="status">Checking connection…</p>
-      <button id="open-options" type="button">Open settings</button>
+
+      <section class="popup__section">
+        <label class="toggle-row">
+          <span class="toggle-row__label">Auto Allow</span>
+          <input id="auto-allow" type="checkbox" class="toggle-row__input" />
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-row__label">Prune old messages</span>
+          <input id="prune-enabled" type="checkbox" class="toggle-row__input" />
+        </label>
+        <label class="field">
+          <span class="field__label">Keep latest turns</span>
+          <div class="field__row">
+            <input
+              id="keep-latest"
+              type="number"
+              class="field__input"
+              min="2"
+              max="200"
+              step="1"
+            />
+            <button id="apply-keep" type="button" class="button-secondary">Apply</button>
+          </div>
+        </label>
+      </section>
+
+      <p id="template-count" class="meta">Templates: …</p>
+
+      <div class="popup__actions">
+        <button id="open-options" type="button">Open settings</button>
+      </div>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>

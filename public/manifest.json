@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GPT Extension",
   "version": "0.1.0",
-  "description": "Chrome extension scaffold — ready for your features.",
+  "description": "ChatGPT utilities: title banner, // templates, Auto Allow, and conversation memory pruning.",
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -27,6 +27,12 @@
   },
   "permissions": ["storage"],
   "host_permissions": ["https://chatgpt.com/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/*"],
+      "matches": ["https://chatgpt.com/*"]
+    }
+  ],
   "content_scripts": [
     {
       "matches": ["https://chatgpt.com/*"],

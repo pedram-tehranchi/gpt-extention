@@ -1,5 +1,6 @@
 import contentStyles from '@/styles/content.css?inline';
 import { getSettings, saveSettings } from '@/services/extensionClient';
+import { withExtensionFonts } from '@/styles/extensionFonts';
 
 export class AutoAllowToggle {
   private readonly host: HTMLElement;
@@ -14,7 +15,7 @@ export class AutoAllowToggle {
 
     const shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
-    style.textContent = contentStyles;
+    style.textContent = withExtensionFonts(contentStyles);
     shadow.append(style);
 
     this.label = document.createElement('label');
@@ -23,6 +24,8 @@ export class AutoAllowToggle {
     this.input = document.createElement('input');
     this.input.type = 'checkbox';
     this.input.className = 'auto-allow-toggle__input';
+    this.input.setAttribute('role', 'switch');
+    this.input.setAttribute('aria-label', 'Auto Allow');
 
     const track = document.createElement('span');
     track.className = 'auto-allow-toggle__track';

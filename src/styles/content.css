@@ -1,6 +1,17 @@
 :host {
   all: initial;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --bg: #0b0f14;
+  --surface: #151b24;
+  --border: #2a3341;
+  --text: #e8eef5;
+  --text-muted: #8b97a8;
+  --accent: #22d3ee;
+  --accent-hover: #06b6d4;
+  --success: #34d399;
+  --error: #f87171;
+  --radius: 10px;
+  --transition: 200ms ease-out;
 }
 
 .conversation-title {
@@ -8,9 +19,9 @@
   max-width: min(480px, 90vw);
   padding: 6px 16px;
   border-radius: 999px;
-  background: rgba(155, 27, 48, 0.92);
-  color: #fff;
-  font-size: 14px;
+  background: rgba(34, 211, 238, 0.92);
+  color: #0b0f14;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.4;
   text-align: center;
@@ -18,7 +29,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   backdrop-filter: blur(8px);
-  box-shadow: 0 2px 12px rgba(155, 27, 48, 0.35);
+  box-shadow: 0 2px 12px rgba(6, 182, 212, 0.35);
   pointer-events: none;
 }
 
@@ -28,17 +39,44 @@
   max-height: 240px;
   overflow-y: auto;
   border-radius: 12px;
-  background: #1a1d27;
-  border: 1px solid #2d3140;
+  background: var(--surface);
+  border: 1px solid var(--border);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   padding: 4px;
+  font-family: inherit;
 }
 
 .template-picker__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 12px;
-  color: #9aa0a6;
+  color: var(--text-muted);
   font-size: 13px;
   line-height: 1.4;
+}
+
+.template-picker__empty-action {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #0b0f14;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.template-picker__empty-action:hover {
+  background: var(--accent-hover);
+}
+
+.template-picker__empty-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .template-picker__item {
@@ -48,20 +86,22 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #e8eaed;
+  color: var(--text);
+  font: inherit;
   font-size: 13px;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
+  transition: background var(--transition);
 }
 
 .template-picker__item:hover,
 .template-picker__item--active {
-  background: #2d3140;
+  background: var(--border);
 }
 
 .template-picker__item:focus-visible {
-  outline: 2px solid #6c8cff;
+  outline: 2px solid var(--accent);
   outline-offset: -2px;
 }
 
@@ -77,6 +117,7 @@
   gap: 8px;
   cursor: pointer;
   user-select: none;
+  font-family: inherit;
 }
 
 .auto-allow-toggle__input {
@@ -92,8 +133,8 @@
   width: 36px;
   height: 20px;
   border-radius: 999px;
-  background: #3a4054;
-  transition: background 0.2s ease;
+  background: var(--border);
+  transition: background var(--transition);
 }
 
 .auto-allow-toggle__thumb {
@@ -104,11 +145,11 @@
   height: 16px;
   border-radius: 50%;
   background: #fff;
-  transition: transform 0.2s ease;
+  transition: transform var(--transition);
 }
 
 .auto-allow-toggle--on .auto-allow-toggle__track {
-  background: #9b1b30;
+  background: var(--accent);
 }
 
 .auto-allow-toggle--on .auto-allow-toggle__thumb {
@@ -116,11 +157,50 @@
 }
 
 .auto-allow-toggle__label {
-  color: #9aa0a6;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 500;
 }
 
 .auto-allow-toggle--on .auto-allow-toggle__label {
-  color: #e8eaed;
+  color: var(--text);
+}
+
+.auto-allow-toggle:focus-within .auto-allow-toggle__track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.prune-toast {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10002;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(21, 27, 36, 0.94);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity var(--transition);
+}
+
+.prune-toast--hiding {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auto-allow-toggle__track,
+  .auto-allow-toggle__thumb,
+  .template-picker__item,
+  .template-picker__empty-action,
+  .prune-toast {
+    transition: none;
+  }
 }

@@ -1,4 +1,5 @@
 import contentStyles from '@/styles/content.css?inline';
+import { withExtensionFonts } from '@/styles/extensionFonts';
 
 export class ConversationTitle {
   private readonly host: HTMLElement;
@@ -12,7 +13,7 @@ export class ConversationTitle {
 
     const shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
-    style.textContent = contentStyles;
+    style.textContent = withExtensionFonts(contentStyles);
     shadow.append(style);
 
     this.label = document.createElement('div');
@@ -28,6 +29,10 @@ export class ConversationTitle {
 
   unmount(): void {
     this.host.remove();
+  }
+
+  setVisible(visible: boolean): void {
+    this.host.style.display = visible ? '' : 'none';
   }
 
   setTitle(title: string): void {

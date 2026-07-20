@@ -14,13 +14,57 @@
 
       <section class="section">
         <h2>Title display</h2>
+        <label class="field field--checkbox">
+          <input id="title-banner-enabled" type="checkbox" />
+          <span class="field__label">Show title banner on ChatGPT</span>
+        </label>
         <label class="field">
           <span class="field__label">Prefix to remove from tab title</span>
-          <input id="title-prefix" type="text" class="field__input" />
+          <input
+            id="title-prefix"
+            type="text"
+            class="field__input"
+            placeholder="e.g. My Name - "
+          />
         </label>
+      </section>
+
+      <section class="section">
+        <h2>Conversation memory</h2>
+        <p class="subtitle">
+          Remove older ChatGPT turns from the page to reduce tab memory. Does not delete the chat on
+          OpenAI. When keep is 2 or lower, the page can feel abrupt.
+        </p>
+        <label class="field field--checkbox">
+          <input id="prune-old-turns" type="checkbox" />
+          <span class="field__label">Remove old messages from the page</span>
+        </label>
+        <label class="field">
+          <span class="field__label">Keep latest turns (2–200)</span>
+          <input
+            id="keep-latest-turns"
+            type="number"
+            class="field__input"
+            min="2"
+            max="200"
+            step="1"
+          />
+        </label>
+      </section>
+
+      <section class="section">
+        <h2>Auto Allow</h2>
+        <p class="subtitle">Automatically click ChatGPT “Allow” permission prompts.</p>
+        <label class="field field--checkbox">
+          <input id="auto-allow-enabled" type="checkbox" />
+          <span class="field__label">Enable Auto Allow</span>
+        </label>
+      </section>
+
+      <div class="settings-actions">
         <button id="save-settings" type="button">Save settings</button>
         <p id="settings-status" class="status" hidden></p>
-      </section>
+      </div>
 
       <section class="section">
         <h2>Templates</h2>
@@ -38,7 +82,9 @@
           </label>
           <div class="form-actions">
             <button type="submit" id="template-submit">Add template</button>
-            <button type="button" id="template-cancel" hidden>Cancel edit</button>
+            <button type="button" id="template-cancel" class="button-secondary" hidden>
+              Cancel edit
+            </button>
           </div>
         </form>
 

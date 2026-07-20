@@ -7,15 +7,22 @@ export function initTitleBanner(): () => void {
   const banner = new ConversationTitle();
   banner.mount();
 
-  let prefixToRemove = 'Daniel Brooks - ';
+  let prefixToRemove = '';
+  let bannerEnabled = true;
 
   const updateTitle = (): void => {
     banner.setTitle(formatConversationTitle(document.title, prefixToRemove));
   };
 
+  const applyVisibility = (): void => {
+    banner.setVisible(bannerEnabled);
+  };
+
   const loadSettings = async (): Promise<void> => {
     const settings = await getSettings();
     prefixToRemove = settings.titlePrefixToRemove;
+    bannerEnabled = settings.titleBannerEnabled;
+    applyVisibility();
     updateTitle();
   };
 

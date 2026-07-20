@@ -1,12 +1,12 @@
 # GPT Extension
 
-Chrome extension scaffold built with Manifest V3 and TypeScript.
+Chrome extension for ChatGPT: cleaned title banner, `//` templates, Auto Allow, and optional conversation-memory pruning.
 
 ## Quick start
 
 ```bash
 npm install
-npm run icons   # placeholder icons (replace with real ones later)
+npm run icons   # regenerate 16/48/128 from public/icons/icon-master.png
 npm run dev     # watch mode — load dist/ in Chrome
 npm run build   # production build
 ```
@@ -18,17 +18,24 @@ npm run build   # production build
 3. Enable **Developer mode**.
 4. Click **Load unpacked** and select the `dist/` folder.
 
+## Features
+
+- **Title banner** — cleaned conversation title on ChatGPT (toggle + prefix in settings)
+- **Templates** — type `//` in the composer to insert saved prompts
+- **Auto Allow** — auto-click ChatGPT Allow prompts (popup, options, or in-page toggle)
+- **Conversation memory** — keep only the latest N DOM turns to lighten long tabs
+
 ## Project layout
 
 | Path | Purpose |
 |------|---------|
-| `public/` | Manifest and static assets |
+| `public/` | Manifest, icons, fonts |
 | `src/background/` | Service worker |
-| `src/content/` | Page-injected scripts (not wired in manifest yet) |
-| `src/popup/` | Toolbar popup UI |
+| `src/content/` | ChatGPT content scripts |
+| `src/popup/` | Toolbar popup |
 | `src/options/` | Settings page |
 | `src/services/` | Chrome APIs, storage, messaging |
-| `src/components/` | Shared UI (empty — add as needed) |
+| `src/components/` | Shadow DOM UI (banner, picker, toggle, toast) |
 | `src/types/` | Shared TypeScript types |
 | `src/utils/` | Helpers |
 | `tests/` | Vitest tests |
@@ -37,9 +44,8 @@ npm run build   # production build
 
 - **Background** handles messages and storage.
 - **Popup / options** are vanilla TypeScript pages (no framework).
-- **Content scripts** run on ChatGPT (`chatgpt.com`) — title banner + `//` template picker
-- Communication uses typed messages via `src/services/messaging.ts`
-- Templates and settings are managed on the options page
+- **Content scripts** run on ChatGPT (`chatgpt.com`).
+- Communication uses typed messages via `src/services/messaging.ts`.
 
 ## Scripts
 

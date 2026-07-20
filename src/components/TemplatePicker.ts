@@ -1,5 +1,6 @@
 import contentStyles from '@/styles/content.css?inline';
 import type { Template } from '@/types/template';
+import { withExtensionFonts } from '@/styles/extensionFonts';
 
 export interface TemplatePickerOptions {
   anchor: HTMLElement;
@@ -26,7 +27,7 @@ export class TemplatePicker {
 
     const shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
-    style.textContent = contentStyles;
+    style.textContent = withExtensionFonts(contentStyles);
     shadow.append(style);
 
     this.list = document.createElement('div');
@@ -86,7 +87,21 @@ export class TemplatePicker {
     if (this.templates.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'template-picker__empty';
-      empty.textContent = 'No templates — add them in extension settings';
+
+      const message = document.createElement('div');
+      message.textContent = 'No templates yet.';
+
+      const action = document.createElement('button');
+      action.type = 'button';
+      action.className = 'template-picker__empty-action';
+      action.textContent = 'Add templates in settings';
+      action.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        chrome.runtime.openOptionsPage();
+        this.options.onDismiss();
+      });
+
+      empty.append(message, action);
       this.list.append(empty);
       return;
     }
