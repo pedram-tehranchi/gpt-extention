@@ -1,5 +1,6 @@
-import { getSettings, getTemplates, saveSettings } from '@/services/extensionClient';
 import { sendMessage } from '@/services/messaging';
+import { getSettings, saveSettings } from '@/services/settings';
+import { getTemplates } from '@/services/templates';
 import { clampKeepLatestTurns } from '@/types/settings';
 
 const statusEl = document.getElementById('status') as HTMLParagraphElement;

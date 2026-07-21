@@ -1,17 +1,28 @@
 import { TemplatePicker } from '@/components/TemplatePicker';
+import { contentLog, getTemplates } from '@/content/chromeApi';
 import { observeComposer } from '@/content/sites/chatgpt/observeComposer';
-import { queryPromptHeader } from '@/content/sites/chatgpt/selectors';
-import { getTemplates } from '@/services/extensionClient';
+import { queryComposerSurface } from '@/content/sites/chatgpt/selectors';
 import type { Template } from '@/types/template';
 import { getTextBeforeCursor, replaceTextBeforeCursor } from '@/utils/contentEditable';
 import { filterTemplatesByQuery, parseTemplateTrigger } from '@/utils/templateTrigger';
-import { logger } from '@/utils/logger';
+
+async function loadTemplates(): Promise<Template[]> {
+  try {
+    return await getTemplates();
+  } catch (error) {
+    contentLog.warn('Failed to load templates from storage', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return [];
+  }
+}
 
 export function initTemplateTrigger(): () => void {
   let picker: TemplatePicker | null = null;
   let activeTextarea: HTMLElement | null = null;
   let activeTriggerText = '';
   let savedCaretRange: Range | null = null;
+  let selecting = false;
 
   const dismissPicker = (): void => {
     picker?.hide();
@@ -26,14 +37,18 @@ export function initTemplateTrigger(): () => void {
       return;
     }
 
-    activeTextarea.focus();
-    replaceTextBeforeCursor(
-      activeTextarea,
-      activeTriggerText,
-      template.content,
-      savedCaretRange,
-    );
+    selecting = true;
+    const textarea = activeTextarea;
+    const triggerText = activeTriggerText;
+    const caret = savedCaretRange;
+
     dismissPicker();
+
+    window.requestAnimationFrame(() => {
+      textarea.focus();
+      replaceTextBeforeCursor(textarea, triggerText, template.content, caret);
+      selecting = false;
+    });
   };
 
   const syncPicker = async (textarea: HTMLElement): Promise<void> => {
@@ -42,7 +57,9 @@ export function initTemplateTrigger(): () => void {
     const trigger = parseTemplateTrigger(textBeforeCursor);
 
     if (!trigger) {
-      dismissPicker();
+      if (!selecting) {
+        dismissPicker();
+      }
       return;
     }
 
@@ -53,9 +70,10 @@ export function initTemplateTrigger(): () => void {
       savedCaretRange = selection.getRangeAt(0).cloneRange();
     }
 
-    const templates = await getTemplates();
+    const templates = await loadTemplates();
     const filtered = filterTemplatesByQuery(templates, trigger.query);
-    const anchor = queryPromptHeader(textarea.closest('form') ?? document) ?? textarea;
+    const anchor =
+      queryComposerSurface(textarea.closest('form') ?? document) ?? textarea;
 
     if (!picker) {
       picker = new TemplatePicker({
@@ -65,6 +83,10 @@ export function initTemplateTrigger(): () => void {
         onDismiss: dismissPicker,
       });
       picker.show();
+      contentLog.info('Template picker opened', {
+        trigger: trigger.triggerText,
+        count: filtered.length,
+      });
       return;
     }
 
@@ -87,18 +109,18 @@ export function initTemplateTrigger(): () => void {
 
     const onBlur = (): void => {
       window.setTimeout(() => {
-        if (!picker) {
+        if (selecting || !picker) {
           return;
         }
         dismissPicker();
-      }, 150);
+      }, 200);
     };
 
     textarea.addEventListener('input', onInput);
     textarea.addEventListener('keyup', onKeyUp);
     textarea.addEventListener('blur', onBlur);
 
-    logger.info('Template trigger bound to composer');
+    contentLog.info('Template trigger bound to composer');
 
     return () => {
       textarea.removeEventListener('input', onInput);

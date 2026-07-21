@@ -7,7 +7,34 @@ export const SELECTORS = {
     'div[data-turn-id-container]:not([data-turn-id-container="client-created-root"])',
   /** Rendered turn sections — ChatGPT uses conversation-turn-N, not conversation-turn. */
   conversationTurn: '[data-testid^="conversation-turn"]',
+  sidebarItem: 'a[data-sidebar-item="true"]',
+  activeSidebarItem: 'a[data-sidebar-item="true"][data-active]',
 } as const;
+
+const CONVERSATION_ID_PATH = /\/c\/([a-f0-9-]+)/i;
+
+export function getConversationIdFromPath(pathname: string = window.location.pathname): string | null {
+  const match = pathname.match(CONVERSATION_ID_PATH);
+  return match?.[1] ?? null;
+}
+
+export function queryActiveSidebarItem(root: ParentNode = document): HTMLAnchorElement | null {
+  return root.querySelector<HTMLAnchorElement>(SELECTORS.activeSidebarItem);
+}
+
+export function querySidebarItemByConversationId(
+  conversationId: string,
+  root: ParentNode = document,
+): HTMLAnchorElement | null {
+  const items = root.querySelectorAll<HTMLAnchorElement>(SELECTORS.sidebarItem);
+  for (const item of items) {
+    const href = item.getAttribute('href') ?? '';
+    if (href.includes(`/c/${conversationId}`)) {
+      return item;
+    }
+  }
+  return null;
+}
 
 export function queryPromptTextarea(root: ParentNode = document): HTMLElement | null {
   return root.querySelector<HTMLElement>(SELECTORS.promptTextarea);

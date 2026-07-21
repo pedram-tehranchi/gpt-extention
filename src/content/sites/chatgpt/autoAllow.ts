@@ -1,11 +1,10 @@
 import { AutoAllowToggle } from '@/components/AutoAllowToggle';
+import { contentLog, getSettings } from '@/content/chromeApi';
 import { queryPromptHeader } from '@/content/sites/chatgpt/selectors';
-import { getSettings } from '@/services/extensionClient';
 import {
   collectAllowButtonsFromNode,
   findAllowButtons,
 } from '@/utils/allowButton';
-import { logger } from '@/utils/logger';
 
 const AUTO_ALLOW_ATTR = 'data-gpt-extension-auto-allowed';
 
@@ -27,7 +26,7 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
     button.setAttribute(AUTO_ALLOW_ATTR, 'true');
     seenButtons.add(button);
     button.click();
-    logger.info('Auto-clicked Allow button');
+    contentLog.info('Auto-clicked Allow button');
   };
 
   const handleNewButtons = (buttons: HTMLButtonElement[]): void => {
@@ -103,7 +102,7 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
 
   chrome.storage.onChanged.addListener(onStorageChange);
 
-  logger.info('Auto Allow observer initialized');
+    contentLog.info('Auto Allow observer initialized');
 
   return () => {
     observer.disconnect();

@@ -1,15 +1,13 @@
 import { showPruneToast } from '@/components/PruneToast';
+import { contentLog, getSettings } from '@/content/chromeApi';
 import { queryConversationTurns } from '@/content/sites/chatgpt/selectors';
-import { getSettings } from '@/services/extensionClient';
-import { DEFAULT_SETTINGS } from '@/types/settings';
 import { selectTurnsToPrune } from '@/utils/pruneTurns';
-import { logger } from '@/utils/logger';
 
 const PRUNE_THROTTLE_MS = 300;
 
 export function initMessagePruner(): () => void {
-  let enabled = DEFAULT_SETTINGS.pruneOldTurnsEnabled;
-  let keepLatestTurns = DEFAULT_SETTINGS.keepLatestTurns;
+  let enabled = true;
+  let keepLatestTurns = 10;
   let throttleTimer: number | undefined;
 
   const prune = (): void => {
@@ -25,7 +23,7 @@ export function initMessagePruner(): () => void {
     }
 
     if (toRemove.length > 0) {
-      logger.info(`Pruned ${toRemove.length} old conversation turn(s)`);
+      contentLog.info(`Pruned ${toRemove.length} old conversation turn(s)`);
       showPruneToast(`Keeping last ${keepLatestTurns} turns`);
     }
   };
@@ -62,7 +60,7 @@ export function initMessagePruner(): () => void {
 
   chrome.storage.onChanged.addListener(onStorageChange);
   void loadSettings();
-  logger.info('Message pruner initialized');
+  contentLog.info('Message pruner initialized');
 
   return () => {
     observer.disconnect();

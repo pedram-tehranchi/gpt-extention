@@ -1,5 +1,5 @@
 import contentStyles from '@/styles/content.css?inline';
-import { getSettings, saveSettings } from '@/services/extensionClient';
+import { getSettings, saveSettings } from '@/content/chromeApi';
 import { withExtensionFonts } from '@/styles/extensionFonts';
 
 export class AutoAllowToggle {

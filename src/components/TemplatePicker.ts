@@ -23,7 +23,8 @@ export class TemplatePicker {
 
     this.host = document.createElement('div');
     this.host.id = 'gpt-extension-template-picker';
-    this.host.style.cssText = 'position:fixed;z-index:10001;';
+    this.host.dataset.gptExtensionUi = 'template-picker';
+    this.host.style.cssText = 'position:fixed;z-index:2147483646;';
 
     const shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
@@ -41,7 +42,7 @@ export class TemplatePicker {
   show(): void {
     this.render();
     this.position();
-    document.body.append(this.host);
+    document.documentElement.append(this.host);
     document.addEventListener('keydown', this.boundKeyHandler, true);
     window.addEventListener('resize', this.positionBound);
   }

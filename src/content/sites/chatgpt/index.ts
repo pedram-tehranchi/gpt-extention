@@ -4,7 +4,7 @@ import { initTemplateTrigger } from '@/content/sites/chatgpt/templateTrigger';
 import { initTitleBanner } from '@/content/sites/chatgpt/titleBanner';
 import { queryPromptTextarea } from '@/content/sites/chatgpt/selectors';
 import type { SiteAdapter } from '@/types/site';
-import { logger } from '@/utils/logger';
+import { contentLog } from '@/content/chromeApi';
 
 function isConversationPage(): boolean {
   if (window.location.pathname.includes('/c/')) {
@@ -49,7 +49,7 @@ export const chatgptAdapter: SiteAdapter = {
 
     void waitForConversation().then(() => {
       if (cancelled || !isConversationPage()) {
-        logger.info('ChatGPT adapter skipped — not on a conversation page');
+        contentLog.info('ChatGPT adapter skipped — not on a conversation page');
         return;
       }
 
@@ -59,7 +59,7 @@ export const chatgptAdapter: SiteAdapter = {
         initAutoAllowToggle(),
         initMessagePruner(),
       ];
-      logger.info('ChatGPT adapter initialized');
+      contentLog.info('ChatGPT adapter initialized');
     });
 
     return () => {

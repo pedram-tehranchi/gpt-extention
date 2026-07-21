@@ -122,7 +122,21 @@
 
 .template-item__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  justify-content: flex-end;
+}
+
+button.button-icon {
+  min-width: 36px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+button.button-secondary:disabled,
+button.button-icon:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 button.button-secondary {

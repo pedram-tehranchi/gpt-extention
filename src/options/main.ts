@@ -2,6 +2,7 @@ import { getSettings, saveSettings } from '@/services/settings';
 import {
   deleteTemplate,
   getTemplates,
+  moveTemplate,
   saveTemplate,
   updateTemplate,
 } from '@/services/templates';
@@ -87,7 +88,7 @@ function renderTemplateList(templates: Template[]): void {
     return;
   }
 
-  for (const template of templates) {
+  templates.forEach((template, index) => {
     const item = document.createElement('li');
     item.className = 'template-item';
 
@@ -100,6 +101,34 @@ function renderTemplateList(templates: Template[]): void {
 
     const actions = document.createElement('div');
     actions.className = 'template-item__actions';
+
+    const moveUpBtn = document.createElement('button');
+    moveUpBtn.type = 'button';
+    moveUpBtn.className = 'button-secondary button-icon';
+    moveUpBtn.textContent = '↑';
+    moveUpBtn.title = 'Move up';
+    moveUpBtn.setAttribute('aria-label', `Move ${template.name} up`);
+    moveUpBtn.disabled = index === 0;
+    moveUpBtn.addEventListener('click', () => {
+      void (async () => {
+        await moveTemplate(template.id, 'up');
+        await refreshTemplates();
+      })();
+    });
+
+    const moveDownBtn = document.createElement('button');
+    moveDownBtn.type = 'button';
+    moveDownBtn.className = 'button-secondary button-icon';
+    moveDownBtn.textContent = '↓';
+    moveDownBtn.title = 'Move down';
+    moveDownBtn.setAttribute('aria-label', `Move ${template.name} down`);
+    moveDownBtn.disabled = index === templates.length - 1;
+    moveDownBtn.addEventListener('click', () => {
+      void (async () => {
+        await moveTemplate(template.id, 'down');
+        await refreshTemplates();
+      })();
+    });
 
     const editBtn = document.createElement('button');
     editBtn.type = 'button';
@@ -124,7 +153,7 @@ function renderTemplateList(templates: Template[]): void {
       })();
     });
 
-    actions.append(editBtn, deleteBtn);
+    actions.append(moveUpBtn, moveDownBtn, editBtn, deleteBtn);
     header.append(name, actions);
 
     const preview = document.createElement('p');
@@ -133,7 +162,7 @@ function renderTemplateList(templates: Template[]): void {
 
     item.append(header, preview);
     templateList.append(item);
-  }
+  });
 }
 
 async function refreshTemplates(): Promise<void> {
