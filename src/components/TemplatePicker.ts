@@ -127,6 +127,15 @@ export class TemplatePicker {
 
       this.list.append(button);
     });
+
+    this.scrollActiveIntoView();
+  }
+
+  private scrollActiveIntoView(): void {
+    const active = this.list.querySelector<HTMLElement>(
+      '.template-picker__item--active',
+    );
+    active?.scrollIntoView({ block: 'nearest' });
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
