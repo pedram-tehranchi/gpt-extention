@@ -1,3 +1,4 @@
+import { reloadChatGptTabs } from '@/services/chatgptTabs';
 import { sendMessage } from '@/services/messaging';
 import { getSettings, saveSettings } from '@/services/settings';
 import { getTemplates } from '@/services/templates';
@@ -56,6 +57,7 @@ applyKeepBtn.addEventListener('click', () => {
     const keepLatestTurns = clampKeepLatestTurns(Number(keepLatestInput.value));
     keepLatestInput.value = String(keepLatestTurns);
     await persistPartial({ keepLatestTurns });
+    await reloadChatGptTabs();
   })();
 });
 
