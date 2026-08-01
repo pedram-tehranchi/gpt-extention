@@ -1,10 +1,14 @@
 .popup {
   width: 340px;
-  padding: 16px;
+  padding: 12px;
 }
 
 .popup__header {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+}
+
+.popup__header h1 {
+  margin-bottom: 4px;
 }
 
 .subtitle {
@@ -14,12 +18,13 @@
 }
 
 .status {
-  margin: 0 0 14px;
-  padding: 8px 12px;
+  margin: 0 0 8px;
+  padding: 4px 10px;
   border-radius: var(--radius);
   background: var(--surface);
   border: 1px solid var(--border);
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .status--ok {
@@ -30,11 +35,12 @@
   color: var(--error);
 }
 
-.popup__section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 14px;
+.panel {
+  margin-bottom: 10px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
 }
 
 .toggle-row {
@@ -42,11 +48,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  padding: 7px 10px;
   cursor: pointer;
+}
+
+.toggle-row + .toggle-row,
+.panel__field {
+  border-top: 1px solid var(--border);
 }
 
 .toggle-row__label {
@@ -61,10 +69,11 @@
   cursor: pointer;
 }
 
-.field {
+.panel__field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  padding: 7px 10px 8px;
 }
 
 .field__label {
@@ -80,10 +89,10 @@
 .field__input {
   flex: 1;
   min-width: 0;
-  padding: 8px 10px;
+  padding: 6px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--bg);
   color: var(--text);
   font: inherit;
 }
@@ -97,6 +106,7 @@ button.button-secondary {
   background: var(--border);
   color: var(--text);
   flex-shrink: 0;
+  padding: 6px 12px;
 }
 
 button.button-secondary:hover {
@@ -104,7 +114,7 @@ button.button-secondary:hover {
 }
 
 .meta {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: var(--text-muted);
   font-size: 12px;
 }

@@ -85,6 +85,7 @@ Do **not** load Google Fonts remotely. Bundle under `public/fonts/` and expose v
 | Picker radius | `12px` |
 | Pills / toggle thumb | `999px` only |
 | Popup width | ~`340px` |
+| Popup density | Compact status chip + one controls panel (dividers, not one card per toggle) |
 | Options max-width | `640–720px` |
 | Transition | `200ms ease-out` (`--transition`) |
 

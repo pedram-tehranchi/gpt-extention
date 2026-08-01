@@ -16,7 +16,7 @@
 
       <p id="status" class="status">Checking connection…</p>
 
-      <section class="popup__section">
+      <section class="panel" aria-label="Quick settings">
         <label class="toggle-row">
           <span class="toggle-row__label">Auto Allow</span>
           <input id="auto-allow" type="checkbox" class="toggle-row__input" />
@@ -25,8 +25,8 @@
           <span class="toggle-row__label">Prune old messages</span>
           <input id="prune-enabled" type="checkbox" class="toggle-row__input" />
         </label>
-        <label class="field">
-          <span class="field__label">Keep latest turns</span>
+        <div class="panel__field">
+          <span class="field__label" id="keep-latest-label">Keep latest turns</span>
           <div class="field__row">
             <input
               id="keep-latest"
@@ -35,10 +35,11 @@
               min="2"
               max="200"
               step="1"
+              aria-labelledby="keep-latest-label"
             />
             <button id="apply-keep" type="button" class="button-secondary">Apply</button>
           </div>
-        </label>
+        </div>
       </section>
 
       <p id="template-count" class="meta">Templates: …</p>
