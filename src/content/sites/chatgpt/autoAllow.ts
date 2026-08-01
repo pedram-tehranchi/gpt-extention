@@ -1,12 +1,17 @@
 import { AutoAllowToggle } from '@/components/AutoAllowToggle';
-import { contentLog, getSettings } from '@/content/chromeApi';
+import {
+  contentLog,
+  getSettings,
+  isExtensionContextValid,
+  offStorageChanged,
+  onStorageChanged,
+} from '@/content/chromeApi';
 import { queryPromptHeader } from '@/content/sites/chatgpt/selectors';
 import {
+  clickAllowButtonIfNeeded,
   collectAllowButtonsFromNode,
   findAllowButtons,
 } from '@/utils/allowButton';
-
-const AUTO_ALLOW_ATTR = 'data-gpt-extension-auto-allowed';
 
 export function initAutoAllow(toggle: AutoAllowToggle): () => void {
   const seenButtons = new WeakSet<HTMLButtonElement>();
@@ -18,15 +23,16 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
     }
   };
 
-  const clickAllowButton = (button: HTMLButtonElement): void => {
-    if (button.hasAttribute(AUTO_ALLOW_ATTR) || !button.isConnected) {
+  const clickPendingAllowButtons = (): void => {
+    if (!enabled) {
       return;
     }
 
-    button.setAttribute(AUTO_ALLOW_ATTR, 'true');
-    seenButtons.add(button);
-    button.click();
-    contentLog.info('Auto-clicked Allow button');
+    for (const button of findAllowButtons()) {
+      if (clickAllowButtonIfNeeded(button, seenButtons)) {
+        contentLog.info('Auto-clicked Allow button');
+      }
+    }
   };
 
   const handleNewButtons = (buttons: HTMLButtonElement[]): void => {
@@ -42,10 +48,12 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
         continue;
       }
 
-      seenButtons.add(button);
-      window.requestAnimationFrame(() => {
-        clickAllowButton(button);
-      });
+      // Click immediately — requestAnimationFrame is paused in background tabs.
+      if (clickAllowButtonIfNeeded(button, seenButtons)) {
+        contentLog.info('Auto-clicked Allow button');
+      } else {
+        seenButtons.add(button);
+      }
     }
   };
 
@@ -79,11 +87,7 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
       return;
     }
 
-    for (const button of findAllowButtons()) {
-      if (!seenButtons.has(button)) {
-        handleNewButtons([button]);
-      }
-    }
+    clickPendingAllowButtons();
   });
 
   const onStorageChange = (
@@ -97,16 +101,27 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
     const next = changes.settings.newValue as { autoAllowEnabled?: boolean } | undefined;
     if (typeof next?.autoAllowEnabled === 'boolean') {
       enabled = next.autoAllowEnabled;
+      if (enabled) {
+        clickPendingAllowButtons();
+      }
     }
   };
 
-  chrome.storage.onChanged.addListener(onStorageChange);
+  const onVisibilityChange = (): void => {
+    if (document.visibilityState === 'visible') {
+      clickPendingAllowButtons();
+    }
+  };
 
-    contentLog.info('Auto Allow observer initialized');
+  onStorageChanged(onStorageChange);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  contentLog.info('Auto Allow observer initialized');
 
   return () => {
     observer.disconnect();
-    chrome.storage.onChanged.removeListener(onStorageChange);
+    offStorageChanged(onStorageChange);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
   };
 }
 
@@ -114,8 +129,23 @@ export function initAutoAllowToggle(): () => void {
   let toggle: AutoAllowToggle | null = null;
   let autoAllowCleanup: (() => void) | undefined;
   let currentHeader: HTMLElement | null = null;
+  let stopped = false;
+
+  const unmount = (): void => {
+    autoAllowCleanup?.();
+    autoAllowCleanup = undefined;
+    toggle?.unmount();
+    toggle = null;
+    currentHeader = null;
+  };
 
   const mount = (): void => {
+    if (stopped || !isExtensionContextValid()) {
+      stopped = true;
+      unmount();
+      return;
+    }
+
     const header = queryPromptHeader();
     if (!header || header === currentHeader) {
       return;
@@ -129,17 +159,16 @@ export function initAutoAllowToggle(): () => void {
     autoAllowCleanup = initAutoAllow(toggle);
   };
 
-  const unmount = (): void => {
-    autoAllowCleanup?.();
-    autoAllowCleanup = undefined;
-    toggle?.unmount();
-    toggle = null;
-    currentHeader = null;
-  };
-
   mount();
 
   const observer = new MutationObserver(() => {
+    if (stopped || !isExtensionContextValid()) {
+      stopped = true;
+      observer.disconnect();
+      unmount();
+      return;
+    }
+
     const header = queryPromptHeader();
     if (!header) {
       unmount();
@@ -151,6 +180,7 @@ export function initAutoAllowToggle(): () => void {
   observer.observe(document.body, { childList: true, subtree: true });
 
   return () => {
+    stopped = true;
     observer.disconnect();
     unmount();
   };
