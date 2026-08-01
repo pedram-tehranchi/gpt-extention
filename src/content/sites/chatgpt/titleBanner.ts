@@ -1,5 +1,10 @@
 import { ConversationTitle } from '@/components/ConversationTitle';
-import { contentLog, getSettings } from '@/content/chromeApi';
+import {
+  contentLog,
+  getSettings,
+  offStorageChanged,
+  onStorageChanged,
+} from '@/content/chromeApi';
 import {
   isInvalidConversationTitle,
   resolveConversationTitle,
@@ -137,7 +142,7 @@ export function initTitleBanner(): () => void {
     }
   };
 
-  chrome.storage.onChanged.addListener(onStorageChange);
+  onStorageChanged(onStorageChange);
 
   updateTitleNow();
   contentLog.info('Title banner initialized');
@@ -151,7 +156,7 @@ export function initTitleBanner(): () => void {
     rootObserver.disconnect();
     window.clearInterval(pathPollId);
     window.removeEventListener('popstate', onPopState);
-    chrome.storage.onChanged.removeListener(onStorageChange);
+    offStorageChanged(onStorageChange);
     banner.unmount();
   };
 }

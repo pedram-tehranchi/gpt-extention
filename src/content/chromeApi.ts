@@ -14,6 +14,11 @@ const SETTINGS_KEY = 'settings';
 const TEMPLATES_KEY = 'templates';
 const LOG_PREFIX = '[GPT Extension]';
 
+export type StorageChangedListener = (
+  changes: Record<string, chrome.storage.StorageChange>,
+  area: string,
+) => void;
+
 let warnedContextInvalidated = false;
 
 function formatLogEntry(message: string, context?: Record<string, unknown>): string {
@@ -54,12 +59,15 @@ export function formatUnknownError(error: unknown): string {
   }
 }
 
-function isContextInvalidatedError(error: unknown): boolean {
-  const message = formatUnknownError(error);
+export function isExtensionContextInvalidatedMessage(message: string): boolean {
   return message.includes('Extension context invalidated');
 }
 
-function warnContextInvalidatedOnce(): void {
+function isContextInvalidatedError(error: unknown): boolean {
+  return isExtensionContextInvalidatedMessage(formatUnknownError(error));
+}
+
+export function warnContextInvalidatedOnce(): void {
   if (warnedContextInvalidated) {
     return;
   }
@@ -72,6 +80,63 @@ function warnContextInvalidatedOnce(): void {
 /** Reset one-shot warn flag (tests only). */
 export function resetContextInvalidatedWarningForTests(): void {
   warnedContextInvalidated = false;
+}
+
+export function onStorageChanged(listener: StorageChangedListener): void {
+  if (!isExtensionContextValid()) {
+    warnContextInvalidatedOnce();
+    return;
+  }
+
+  try {
+    chrome.storage.onChanged.addListener(listener);
+  } catch (error) {
+    if (isContextInvalidatedError(error)) {
+      warnContextInvalidatedOnce();
+      return;
+    }
+    throw error;
+  }
+}
+
+export function offStorageChanged(listener: StorageChangedListener): void {
+  if (!isExtensionContextValid()) {
+    warnContextInvalidatedOnce();
+    return;
+  }
+
+  try {
+    chrome.storage.onChanged.removeListener(listener);
+  } catch (error) {
+    if (isContextInvalidatedError(error)) {
+      warnContextInvalidatedOnce();
+      return;
+    }
+    throw error;
+  }
+}
+
+export function installContextInvalidationSafetyNet(): void {
+  const handleRejection = (event: PromiseRejectionEvent): void => {
+    if (!isContextInvalidatedError(event.reason)) {
+      return;
+    }
+    warnContextInvalidatedOnce();
+    event.preventDefault();
+  };
+
+  const handleError = (event: ErrorEvent): void => {
+    const message = event.message || formatUnknownError(event.error);
+    if (!isExtensionContextInvalidatedMessage(message)) {
+      return;
+    }
+    warnContextInvalidatedOnce();
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  };
+
+  window.addEventListener('unhandledrejection', handleRejection);
+  window.addEventListener('error', handleError);
 }
 
 export async function getSettings(): Promise<ExtensionSettings> {

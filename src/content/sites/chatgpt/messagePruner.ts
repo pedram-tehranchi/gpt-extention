@@ -1,5 +1,10 @@
 import { showPruneToast } from '@/components/PruneToast';
-import { contentLog, getSettings } from '@/content/chromeApi';
+import {
+  contentLog,
+  getSettings,
+  offStorageChanged,
+  onStorageChanged,
+} from '@/content/chromeApi';
 import { queryConversationTurns } from '@/content/sites/chatgpt/selectors';
 import { selectTurnsToPrune } from '@/utils/pruneTurns';
 
@@ -58,13 +63,13 @@ export function initMessagePruner(): () => void {
     }
   };
 
-  chrome.storage.onChanged.addListener(onStorageChange);
+  onStorageChanged(onStorageChange);
   void loadSettings();
   contentLog.info('Message pruner initialized');
 
   return () => {
     observer.disconnect();
-    chrome.storage.onChanged.removeListener(onStorageChange);
+    offStorageChanged(onStorageChange);
     if (throttleTimer !== undefined) {
       window.clearTimeout(throttleTimer);
       throttleTimer = undefined;

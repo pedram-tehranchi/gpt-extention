@@ -1,4 +1,8 @@
 import contentStyles from '@/styles/content.css?inline';
+import {
+  isExtensionContextValid,
+  warnContextInvalidatedOnce,
+} from '@/content/chromeApi';
 import type { Template } from '@/types/template';
 import { withExtensionFonts } from '@/styles/extensionFonts';
 
@@ -98,7 +102,16 @@ export class TemplatePicker {
       action.textContent = 'Add templates in settings';
       action.addEventListener('mousedown', (event) => {
         event.preventDefault();
-        chrome.runtime.openOptionsPage();
+        if (!isExtensionContextValid()) {
+          warnContextInvalidatedOnce();
+          this.options.onDismiss();
+          return;
+        }
+        try {
+          chrome.runtime.openOptionsPage();
+        } catch {
+          warnContextInvalidatedOnce();
+        }
         this.options.onDismiss();
       });
 

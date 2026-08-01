@@ -1,5 +1,10 @@
-import { contentLog } from '@/content/chromeApi';
+import {
+  contentLog,
+  installContextInvalidationSafetyNet,
+} from '@/content/chromeApi';
 import { getMatchingAdapter } from '@/content/sites/registry';
+
+installContextInvalidationSafetyNet();
 
 const adapter = getMatchingAdapter();
 

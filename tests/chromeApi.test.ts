@@ -6,8 +6,13 @@ import {
   contentLog,
   getSettings,
   getTemplates,
+  installContextInvalidationSafetyNet,
+  isExtensionContextInvalidatedMessage,
+  offStorageChanged,
+  onStorageChanged,
   resetContextInvalidatedWarningForTests,
   saveSettings,
+  warnContextInvalidatedOnce,
 } from '@/content/chromeApi';
 
 describe('chromeApi extension context', () => {
@@ -30,6 +35,10 @@ describe('chromeApi extension context', () => {
         local: {
           get: vi.fn(),
           set: vi.fn(),
+        },
+        onChanged: {
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
         },
       },
     });
@@ -56,6 +65,10 @@ describe('chromeApi extension context', () => {
           get: vi.fn().mockRejectedValue(new Error('Extension context invalidated.')),
           set: vi.fn().mockRejectedValue(new Error('Extension context invalidated.')),
         },
+        onChanged: {
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+        },
       },
     });
 
@@ -80,5 +93,69 @@ describe('chromeApi extension context', () => {
       '[GPT Extension]',
       'Failed to load templates from storage {"error":"Extension context invalidated."}',
     );
+  });
+
+  it('no-ops storage change listeners when runtime.id is missing', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const addListener = vi.fn();
+    const removeListener = vi.fn();
+
+    vi.stubGlobal('chrome', {
+      runtime: {},
+      storage: {
+        onChanged: { addListener, removeListener },
+      },
+    });
+
+    expect(() => onStorageChanged(vi.fn())).not.toThrow();
+    expect(() => offStorageChanged(vi.fn())).not.toThrow();
+    expect(addListener).not.toHaveBeenCalled();
+    expect(removeListener).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it('swallows addListener Extension context invalidated errors', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    vi.stubGlobal('chrome', {
+      runtime: { id: 'test-extension-id' },
+      storage: {
+        onChanged: {
+          addListener: vi.fn(() => {
+            throw new Error('Extension context invalidated.');
+          }),
+          removeListener: vi.fn(),
+        },
+      },
+    });
+
+    expect(() => onStorageChanged(vi.fn())).not.toThrow();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0]?.[1])).toContain('Refresh this ChatGPT tab');
+  });
+
+  it('detects invalidated context messages for the safety net', () => {
+    expect(
+      isExtensionContextInvalidatedMessage('Extension context invalidated.'),
+    ).toBe(true);
+    expect(isExtensionContextInvalidatedMessage('unrelated')).toBe(false);
+  });
+
+  it('installs safety net listeners and warns once for invalidated context', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const addEventListener = vi.spyOn(window, 'addEventListener');
+
+    installContextInvalidationSafetyNet();
+
+    expect(addEventListener).toHaveBeenCalledWith(
+      'unhandledrejection',
+      expect.any(Function),
+    );
+    expect(addEventListener).toHaveBeenCalledWith('error', expect.any(Function));
+
+    warnContextInvalidatedOnce();
+    warnContextInvalidatedOnce();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0]?.[1])).toContain('Refresh this ChatGPT tab');
   });
 });
