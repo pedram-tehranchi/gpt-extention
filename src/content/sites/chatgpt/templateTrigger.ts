@@ -1,5 +1,9 @@
 import { TemplatePicker } from '@/components/TemplatePicker';
-import { contentLog, getTemplates } from '@/content/chromeApi';
+import {
+  contentLog,
+  getTemplates,
+  isExtensionContextValid,
+} from '@/content/chromeApi';
 import { observeComposer } from '@/content/sites/chatgpt/observeComposer';
 import { queryComposerSurface } from '@/content/sites/chatgpt/selectors';
 import type { Template } from '@/types/template';
@@ -7,14 +11,7 @@ import { getTextBeforeCursor, replaceTextBeforeCursor } from '@/utils/contentEdi
 import { filterTemplatesByQuery, parseTemplateTrigger } from '@/utils/templateTrigger';
 
 async function loadTemplates(): Promise<Template[]> {
-  try {
-    return await getTemplates();
-  } catch (error) {
-    contentLog.warn('Failed to load templates from storage', {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return [];
-  }
+  return getTemplates();
 }
 
 export function initTemplateTrigger(): () => void {
@@ -63,6 +60,12 @@ export function initTemplateTrigger(): () => void {
       return;
     }
 
+    if (!isExtensionContextValid()) {
+      dismissPicker();
+      await loadTemplates();
+      return;
+    }
+
     activeTriggerText = trigger.triggerText;
 
     const selection = window.getSelection();
@@ -76,13 +79,18 @@ export function initTemplateTrigger(): () => void {
       queryComposerSurface(textarea.closest('form') ?? document) ?? textarea;
 
     if (!picker) {
-      picker = new TemplatePicker({
-        anchor,
-        templates: filtered,
-        onSelect: handleSelect,
-        onDismiss: dismissPicker,
-      });
-      picker.show();
+      try {
+        picker = new TemplatePicker({
+          anchor,
+          templates: filtered,
+          onSelect: handleSelect,
+          onDismiss: dismissPicker,
+        });
+        picker.show();
+      } catch {
+        dismissPicker();
+        return;
+      }
       contentLog.info('Template picker opened', {
         trigger: trigger.triggerText,
         count: filtered.length,

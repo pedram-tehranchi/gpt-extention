@@ -66,12 +66,21 @@ export class AutoAllowToggle {
   }
 
   private async loadState(): Promise<void> {
-    const settings = await getSettings();
-    await this.setEnabled(settings.autoAllowEnabled, false, false);
+    try {
+      const settings = await getSettings();
+      await this.setEnabled(settings.autoAllowEnabled, false, false);
+    } catch {
+      // Extension context may be invalidated after a reload; ignore.
+    }
   }
 
   private async handleToggle(checked: boolean): Promise<void> {
-    await this.setEnabled(checked, true);
+    try {
+      await this.setEnabled(checked, true);
+    } catch {
+      this.input.checked = this.enabled;
+      this.label.classList.toggle('auto-allow-toggle--on', this.enabled);
+    }
   }
 
   private async setEnabled(

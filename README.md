@@ -89,6 +89,8 @@ npm run build      # rebuild the extension into the dist folder
 
 Then open `chrome://extensions` and click the **reload** button on GPT Extension.
 
+**Important:** after you reload the extension, **refresh any open ChatGPT tabs**. Until you refresh, the old page cannot talk to the new extension and features will not work until you reload the tab.
+
 ---
 
 ## For developers

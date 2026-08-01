@@ -2,11 +2,16 @@
  * Font-face CSS using extension URLs so Shadow DOM on chatgpt.com can load fonts.
  */
 export function getExtensionFontFaceCss(): string {
-  const regular = chrome.runtime.getURL('fonts/PlusJakartaSans-Regular.woff2');
-  const medium = chrome.runtime.getURL('fonts/PlusJakartaSans-Medium.woff2');
-  const semibold = chrome.runtime.getURL('fonts/PlusJakartaSans-SemiBold.woff2');
+  try {
+    if (!chrome.runtime?.id) {
+      return '';
+    }
 
-  return `
+    const regular = chrome.runtime.getURL('fonts/PlusJakartaSans-Regular.woff2');
+    const medium = chrome.runtime.getURL('fonts/PlusJakartaSans-Medium.woff2');
+    const semibold = chrome.runtime.getURL('fonts/PlusJakartaSans-SemiBold.woff2');
+
+    return `
 @font-face {
   font-family: 'Plus Jakarta Sans';
   src: url('${regular}') format('woff2');
@@ -29,8 +34,12 @@ export function getExtensionFontFaceCss(): string {
   font-display: swap;
 }
 `.trim();
+  } catch {
+    return '';
+  }
 }
 
 export function withExtensionFonts(contentCss: string): string {
-  return `${getExtensionFontFaceCss()}\n${contentCss}`;
+  const fontFaces = getExtensionFontFaceCss();
+  return fontFaces ? `${fontFaces}\n${contentCss}` : contentCss;
 }
