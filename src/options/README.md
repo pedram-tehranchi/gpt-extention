@@ -2,12 +2,12 @@
 
 ## Purpose
 
-Full settings page: title banner, Auto Allow, conversation prune, and template CRUD/reorder.
+Full settings page: title banner, Auto Allow, conversation prune, template CRUD/reorder, and pinned URL CRUD/reorder.
 
 ## Contains
 
-- `index.html`: Options page markup
-- `main.ts`: Settings form, template list (add/edit/delete/reorder)
+- `index.html`: Options page markup (collapsible sections, closed by default)
+- `main.ts`: Auto-saving preferences; template/pin CRUD and reorder
 - `options.css`: Options styles (design-system tokens)
 
 ## Rules
@@ -18,10 +18,10 @@ Full settings page: title banner, Auto Allow, conversation prune, and template C
 
 ## Connections
 
-- Uses `src/services/settings.ts` and `src/services/templates.ts`.
+- Uses `src/services/settings.ts`, `src/services/templates.ts`, and `src/services/pins.ts`.
 - Declared as `options_ui.page` in `public/manifest.json`.
 - Linked from the popup via “Open options”.
 
 ## Update rule
 
-Update this file when options UI, settings fields, or template management change.
+Update this file when options UI, settings fields, template management, or pinned URLs change.

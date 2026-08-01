@@ -17,8 +17,8 @@ Derived from **ui-ux-pro-max** (AI-Native utility) with a cyan-on-slate palette 
 | Surface | Job |
 |---------|-----|
 | **Popup** | Product home: connection status, Auto Allow / prune toggles, keep-N, template count, open settings |
-| **Options** | Title banner + prefix, conversation memory, Auto Allow, template CRUD |
-| **ChatGPT page** | Title pill, `//` template picker, Auto Allow toggle, prune toast |
+| **Options** | Title banner + prefix, conversation memory, Auto Allow, template CRUD, pinned URL CRUD |
+| **ChatGPT page** | Title pill, `//` template picker, Auto Allow toggle, prune toast, pinned URLs floater |
 
 ---
 
@@ -95,8 +95,8 @@ Do **not** load Google Fonts remotely. Bundle under `public/fonts/` and expose v
 
 ```text
 Popup     → brand + status + toggles + keep-N + settings
-Options   → Title | Memory | Auto Allow | Templates (same tokens)
-ChatGPT   → cyan title pill | cyan Auto Allow | dark picker matching options
+Options   → Title | Memory | Auto Allow | Templates | Pinned URLs (collapsible sections, closed by default)
+ChatGPT   → cyan title pill | cyan Auto Allow | dark picker | cyan pin floater matching options
 ```
 
 ---
@@ -113,9 +113,12 @@ ChatGPT   → cyan title pill | cyan Auto Allow | dark picker matching options
 
 ### Settings model
 
-- Preferences (title, memory, Auto Allow, banner) share one **Save settings** (or shared “Saved” toast if auto-save is added later)
+- Preference sections (title, memory, Auto Allow, templates, pinned URLs) are **collapsed by default**; expand a section title to edit
+- Title / memory / Auto Allow preferences **auto-save** on change (brief “Saved” status); no Save button
 - Auto Allow must be configurable from options, not only on ChatGPT
 - Templates may save on submit; use the same toast language (“Template saved”)
+- Pinned URLs save on submit (`http`/`https` only); same toast language (“Pin saved”)
+- Floater panel can add pins via an “Add pin” control that expands name + URL fields (both required); drag rows to reorder; Options remains full CRUD
 
 ### Pruning
 
@@ -149,6 +152,7 @@ ChatGPT   → cyan title pill | cyan Auto Allow | dark picker matching options
 - Visible `:focus-visible` using `--accent`
 - `prefers-reduced-motion` for toggles / toasts
 - Auto Allow labeled (`aria-label` / associated text / switch role)
+- Pinned URLs floater labeled (`aria-label="Pinned URLs"`); panel uses dialog + menu semantics
 - Do not rely on hover alone for edit/delete on touch
 
 ---

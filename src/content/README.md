@@ -7,9 +7,9 @@ Content scripts injected into supported websites.
 ## Contains
 
 * `index.ts`: Bootstraps the matching site adapter from the registry
-* `chromeApi.ts`: Content-local settings/templates/log via `chrome.storage.local` (no shared SW chunks)
+* `chromeApi.ts`: Content-local settings/templates/pins/log via `chrome.storage.local` (no shared SW chunks)
 * `sites/registry.ts`: Site matcher registry
-* `sites/chatgpt/`: ChatGPT adapter — title banner, template trigger, auto allow, message pruner, selectors, composer observer
+* `sites/chatgpt/`: ChatGPT adapter — title banner, template trigger, auto allow, message pruner, pinned URLs floater, selectors, composer observer
 
 ## Rules
 
@@ -21,7 +21,7 @@ Content scripts injected into supported websites.
 ## Connections
 
 * Activated by manifest on `https://chatgpt.com/*`
-* Reads settings/templates via `chromeApi.ts` → `chrome.storage.local`
+* Reads settings/templates/pins via `chromeApi.ts` → `chrome.storage.local`
 * Renders UI via `src/components/` (Shadow DOM + `content.css`)
 
 ## Update rule

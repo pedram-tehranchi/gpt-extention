@@ -9,6 +9,7 @@ Reusable UI injected into web pages via Shadow DOM.
 * `ConversationTitle.ts`: Fixed title banner for conversation pages
 * `TemplatePicker.ts`: Dropdown for `//` template selection
 * `AutoAllowToggle.ts`: Composer toggle for auto-clicking Allow prompts
+* `PinFloater.ts`: Draggable floating circle listing pinned URLs
 * `PruneToast.ts`: Ephemeral toast when old turns are pruned
 
 ## Rules

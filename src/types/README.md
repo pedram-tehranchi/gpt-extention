@@ -9,6 +9,7 @@ Shared TypeScript types and small pure helpers used across background, UI, and c
 - `messages.ts`: Extension message/response shapes (`PING`, settings, templates)
 - `settings.ts`: `ExtensionSettings`, defaults, and `clampKeepLatestTurns`
 - `template.ts`: Template and template input types
+- `pin.ts`: Pinned URL and floater position types
 - `site.ts`: `SiteAdapter` contract for content site adapters
 
 ## Rules

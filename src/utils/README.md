@@ -9,7 +9,10 @@ Pure or DOM-light helpers shared by content features, services, and tests.
 - `allowButton.ts`: Detect ChatGPT “Allow” buttons
 - `contentEditable.ts`: Composer text/caret helpers for template insertion
 - `conversationTitle.ts`: Clean and resolve conversation titles from sidebar/DOM
+- `dragThreshold.ts`: Pointer drag vs click threshold helper
 - `logger.ts`: Prefixed console logger (background/services — not content)
+- `pinUrl.ts`: Validate/normalize pinned http(s) URLs
+- `pinFloaterPosition.ts`: Shared floater edge-inset position helpers
 - `pruneTurns.ts`: Decide which conversation turns to keep/remove
 - `reorder.ts`: Array move helper (template reorder)
 - `tabTitle.ts`: Format conversation titles for display

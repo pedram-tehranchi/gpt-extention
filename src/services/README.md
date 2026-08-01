@@ -10,6 +10,7 @@ Chrome API wrappers — storage, messaging, and future HTTP/API clients.
 * `storage.ts`: `chrome.storage.local` read/write helpers
 * `settings.ts`: Extension settings persistence
 * `templates.ts`: Template CRUD and reorder for `//` slash commands
+* `pins.ts`: Pinned URL CRUD and reorder for the ChatGPT floater
 * `chatgptTabs.ts`: Reload open ChatGPT tabs after keep-N Apply
 
 ## Rules

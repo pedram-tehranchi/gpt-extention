@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   CONTENT_DEFAULT_SETTINGS,
   contentLog,
+  getPins,
   getSettings,
   getTemplates,
   installContextInvalidationSafetyNet,
@@ -44,6 +45,7 @@ describe('chromeApi extension context', () => {
     });
 
     await expect(getTemplates()).resolves.toEqual([]);
+    await expect(getPins()).resolves.toEqual([]);
     await expect(getSettings()).resolves.toEqual(CONTENT_DEFAULT_SETTINGS);
     await expect(
       saveSettings({ ...CONTENT_DEFAULT_SETTINGS, autoAllowEnabled: true }),
@@ -73,6 +75,7 @@ describe('chromeApi extension context', () => {
     });
 
     await expect(getTemplates()).resolves.toEqual([]);
+    await expect(getPins()).resolves.toEqual([]);
     await expect(getSettings()).resolves.toEqual(CONTENT_DEFAULT_SETTINGS);
     await expect(
       saveSettings({ ...CONTENT_DEFAULT_SETTINGS, autoAllowEnabled: true }),

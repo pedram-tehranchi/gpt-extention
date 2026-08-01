@@ -1,5 +1,6 @@
 import { initAutoAllowToggle } from '@/content/sites/chatgpt/autoAllow';
 import { initMessagePruner } from '@/content/sites/chatgpt/messagePruner';
+import { initPinnedUrls } from '@/content/sites/chatgpt/pinnedUrls';
 import { initTemplateTrigger } from '@/content/sites/chatgpt/templateTrigger';
 import { initTitleBanner } from '@/content/sites/chatgpt/titleBanner';
 import { queryPromptTextarea } from '@/content/sites/chatgpt/selectors';
@@ -46,6 +47,7 @@ export const chatgptAdapter: SiteAdapter = {
   init(): () => void {
     let cleanups: Array<() => void> = [];
     let cancelled = false;
+    const pinCleanup = initPinnedUrls();
 
     void waitForConversation().then(() => {
       if (cancelled || !isConversationPage()) {
@@ -64,6 +66,7 @@ export const chatgptAdapter: SiteAdapter = {
 
     return () => {
       cancelled = true;
+      pinCleanup();
       cleanups.forEach((cleanup) => cleanup());
       cleanups = [];
     };
