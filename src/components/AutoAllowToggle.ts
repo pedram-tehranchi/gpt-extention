@@ -65,10 +65,17 @@ export class AutoAllowToggle {
     this.changeCallback = callback;
   }
 
+  /** Update UI from external settings (e.g. popup) without persisting or firing onChange. */
+  syncEnabled(enabled: boolean): void {
+    this.enabled = enabled;
+    this.input.checked = enabled;
+    this.label.classList.toggle('auto-allow-toggle--on', enabled);
+  }
+
   private async loadState(): Promise<void> {
     try {
       const settings = await getSettings();
-      await this.setEnabled(settings.autoAllowEnabled, false, false);
+      this.syncEnabled(settings.autoAllowEnabled);
     } catch {
       // Extension context may be invalidated after a reload; ignore.
     }
@@ -78,8 +85,7 @@ export class AutoAllowToggle {
     try {
       await this.setEnabled(checked, true);
     } catch {
-      this.input.checked = this.enabled;
-      this.label.classList.toggle('auto-allow-toggle--on', this.enabled);
+      this.syncEnabled(this.enabled);
     }
   }
 
@@ -88,9 +94,7 @@ export class AutoAllowToggle {
     persist: boolean,
     notify = true,
   ): Promise<void> {
-    this.enabled = enabled;
-    this.input.checked = enabled;
-    this.label.classList.toggle('auto-allow-toggle--on', enabled);
+    this.syncEnabled(enabled);
 
     if (notify) {
       this.changeCallback?.(enabled);

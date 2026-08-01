@@ -101,6 +101,7 @@ export function initAutoAllow(toggle: AutoAllowToggle): () => void {
     const next = changes.settings.newValue as { autoAllowEnabled?: boolean } | undefined;
     if (typeof next?.autoAllowEnabled === 'boolean') {
       enabled = next.autoAllowEnabled;
+      toggle.syncEnabled(next.autoAllowEnabled);
       if (enabled) {
         clickPendingAllowButtons();
       }
