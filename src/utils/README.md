@@ -13,7 +13,7 @@ Pure or DOM-light helpers shared by content features, services, and tests.
 - `logger.ts`: Prefixed console logger (background/services — not content)
 - `pinUrl.ts`: Validate/normalize pinned http(s) URLs
 - `pinFloaterPosition.ts`: Shared floater edge-inset position helpers
-- `pruneTurns.ts`: Decide which conversation turns to keep/remove
+- `pruneTurns.ts`: Decide which conversation turns to keep/remove (including rendered-aware selection for virtualized placeholders)
 - `reorder.ts`: Array move helper (template reorder)
 - `tabTitle.ts`: Format conversation titles for display
 - `templateTrigger.ts`: Detect `//` trigger text in the composer

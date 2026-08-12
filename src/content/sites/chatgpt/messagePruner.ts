@@ -5,8 +5,11 @@ import {
   offStorageChanged,
   onStorageChanged,
 } from '@/content/chromeApi';
-import { queryConversationTurns } from '@/content/sites/chatgpt/selectors';
-import { selectTurnsToPrune } from '@/utils/pruneTurns';
+import {
+  isRenderedTurn,
+  queryConversationTurns,
+} from '@/content/sites/chatgpt/selectors';
+import { selectNodesToPrune } from '@/utils/pruneTurns';
 
 const PRUNE_THROTTLE_MS = 300;
 
@@ -21,7 +24,7 @@ export function initMessagePruner(): () => void {
     }
 
     const turns = queryConversationTurns();
-    const toRemove = selectTurnsToPrune(turns, keepLatestTurns);
+    const toRemove = selectNodesToPrune(turns, keepLatestTurns, isRenderedTurn);
 
     for (const turn of toRemove) {
       turn.remove();

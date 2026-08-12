@@ -59,6 +59,17 @@ export function preferTurnElements(
 }
 
 /**
+ * True when the node is a rendered conversation turn, or an outer wrapper that
+ * currently contains one. Empty virtualizer placeholders return false.
+ */
+export function isRenderedTurn(el: HTMLElement): boolean {
+  if (el.matches(SELECTORS.conversationTurn)) {
+    return true;
+  }
+  return el.querySelector(SELECTORS.conversationTurn) !== null;
+}
+
+/**
  * Returns conversation turns in document order (oldest first).
  * Prefers outer turn containers so virtualized placeholders are included.
  */
