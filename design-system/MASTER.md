@@ -106,8 +106,9 @@ ChatGPT   → cyan title pill | cyan Auto Allow | dark picker | cyan pin floater
 ### Popup (product home)
 
 - Show Connected / not (background ping)
-- Instant toggles: Auto Allow, Prune old messages (persist immediately)
-- Keep-latest control (clamp 2–200)
+- Instant toggles: Auto Allow (persist immediately)
+- Prune old messages: persist immediately and reload open ChatGPT tabs (same as keep-latest Apply)
+- Keep-latest control (clamp 2–200); **disabled (inactive appearance) while prune is off**; Apply persists and reloads ChatGPT tabs
 - Template count + path to settings
 - No scaffold / “tell me what to build” copy
 
@@ -115,6 +116,8 @@ ChatGPT   → cyan title pill | cyan Auto Allow | dark picker | cyan pin floater
 
 - Preference sections (title, memory, Auto Allow, templates, pinned URLs) are **collapsed by default**; expand a section title to edit
 - Title / memory / Auto Allow preferences **auto-save** on change (brief “Saved” status); no Save button
+- Keep-latest in Conversation memory is **disabled while “Remove old messages” is off** (same inactive treatment as popup)
+- Toggling “Remove old messages” or changing keep-latest reloads open ChatGPT tabs
 - Auto Allow must be configurable from options, not only on ChatGPT
 - Templates may save on submit; use the same toast language (“Template saved”)
 - Pinned URLs save on submit (`http`/`https` only); same toast language (“Pin saved”)

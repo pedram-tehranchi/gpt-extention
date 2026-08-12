@@ -7,7 +7,7 @@ Toolbar popup UI for quick status and common settings.
 ## Contains
 
 - `index.html`: Popup markup
-- `main.ts`: Loads settings/templates, toggles Auto Allow and prune options, opens options page
+- `main.ts`: Loads settings/templates, toggles Auto Allow and prune (prune reloads ChatGPT tabs), disables keep-latest while prune is off, opens options page
 - `popup.css`: Popup styles (design-system tokens)
 
 ## Rules

@@ -22,9 +22,17 @@ import { pinUrlHostname } from '@/utils/pinUrl';
 const titlePrefixInput = document.getElementById('title-prefix') as HTMLInputElement;
 const titleBannerInput = document.getElementById('title-banner-enabled') as HTMLInputElement;
 const pruneOldTurnsInput = document.getElementById('prune-old-turns') as HTMLInputElement;
+const keepLatestField = document.getElementById('keep-latest-field') as HTMLDivElement;
 const keepLatestTurnsInput = document.getElementById('keep-latest-turns') as HTMLInputElement;
 const autoAllowInput = document.getElementById('auto-allow-enabled') as HTMLInputElement;
 const settingsStatus = document.getElementById('settings-status') as HTMLParagraphElement;
+
+function syncKeepLatestControls(): void {
+  const enabled = pruneOldTurnsInput.checked;
+  keepLatestTurnsInput.disabled = !enabled;
+  keepLatestField.classList.toggle('field--disabled', !enabled);
+  keepLatestField.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+}
 
 const templateForm = document.getElementById('template-form') as HTMLFormElement;
 const templateIdInput = document.getElementById('template-id') as HTMLInputElement;
@@ -80,6 +88,7 @@ async function loadSettings(): Promise<void> {
   keepLatestTurnsInput.value = String(settings.keepLatestTurns);
   loadedKeepLatestTurns = settings.keepLatestTurns;
   autoAllowInput.checked = settings.autoAllowEnabled;
+  syncKeepLatestControls();
 }
 
 async function persistSettings(options?: { reloadTabsIfKeepChanged?: boolean }): Promise<void> {
@@ -117,6 +126,9 @@ function scheduleTitlePrefixSave(): void {
 }
 
 function scheduleKeepLatestSave(): void {
+  if (keepLatestTurnsInput.disabled) {
+    return;
+  }
   if (keepLatestTimer !== undefined) {
     window.clearTimeout(keepLatestTimer);
   }
@@ -400,7 +412,11 @@ titleBannerInput.addEventListener('change', () => {
 });
 
 pruneOldTurnsInput.addEventListener('change', () => {
-  void persistSettings();
+  syncKeepLatestControls();
+  void (async () => {
+    await persistSettings();
+    await reloadChatGptTabs();
+  })();
 });
 
 autoAllowInput.addEventListener('change', () => {
@@ -418,6 +434,9 @@ titlePrefixInput.addEventListener('change', () => {
 
 keepLatestTurnsInput.addEventListener('input', scheduleKeepLatestSave);
 keepLatestTurnsInput.addEventListener('change', () => {
+  if (keepLatestTurnsInput.disabled) {
+    return;
+  }
   if (keepLatestTimer !== undefined) {
     window.clearTimeout(keepLatestTimer);
     keepLatestTimer = undefined;

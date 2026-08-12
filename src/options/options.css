@@ -77,6 +77,15 @@
   flex-direction: column;
   gap: 6px;
   margin-bottom: 16px;
+  transition: opacity var(--transition);
+}
+
+.field--disabled {
+  opacity: 0.45;
+}
+
+.field--disabled .field__input {
+  cursor: not-allowed;
 }
 
 .field--checkbox {

@@ -7,10 +7,19 @@ import { clampKeepLatestTurns } from '@/types/settings';
 const statusEl = document.getElementById('status') as HTMLParagraphElement;
 const autoAllowInput = document.getElementById('auto-allow') as HTMLInputElement;
 const pruneEnabledInput = document.getElementById('prune-enabled') as HTMLInputElement;
+const keepLatestField = document.getElementById('keep-latest-field') as HTMLDivElement;
 const keepLatestInput = document.getElementById('keep-latest') as HTMLInputElement;
 const applyKeepBtn = document.getElementById('apply-keep') as HTMLButtonElement;
 const templateCountEl = document.getElementById('template-count') as HTMLParagraphElement;
 const openOptionsBtn = document.getElementById('open-options') as HTMLButtonElement;
+
+function syncKeepLatestControls(): void {
+  const enabled = pruneEnabledInput.checked;
+  keepLatestInput.disabled = !enabled;
+  applyKeepBtn.disabled = !enabled;
+  keepLatestField.classList.toggle('panel__field--disabled', !enabled);
+  keepLatestField.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+}
 
 async function checkConnection(): Promise<void> {
   try {
@@ -29,6 +38,7 @@ async function loadPopupState(): Promise<void> {
   autoAllowInput.checked = settings.autoAllowEnabled;
   pruneEnabledInput.checked = settings.pruneOldTurnsEnabled;
   keepLatestInput.value = String(settings.keepLatestTurns);
+  syncKeepLatestControls();
   templateCountEl.textContent =
     templates.length === 1 ? '1 template' : `${templates.length} templates`;
 }
@@ -49,10 +59,17 @@ autoAllowInput.addEventListener('change', () => {
 });
 
 pruneEnabledInput.addEventListener('change', () => {
-  void persistPartial({ pruneOldTurnsEnabled: pruneEnabledInput.checked });
+  syncKeepLatestControls();
+  void (async () => {
+    await persistPartial({ pruneOldTurnsEnabled: pruneEnabledInput.checked });
+    await reloadChatGptTabs();
+  })();
 });
 
 applyKeepBtn.addEventListener('click', () => {
+  if (applyKeepBtn.disabled) {
+    return;
+  }
   void (async () => {
     const keepLatestTurns = clampKeepLatestTurns(Number(keepLatestInput.value));
     keepLatestInput.value = String(keepLatestTurns);

@@ -47,8 +47,8 @@
             <input id="prune-old-turns" type="checkbox" />
             <span class="field__label">Remove old messages from the page</span>
           </label>
-          <label class="field">
-            <span class="field__label">Keep latest turns (2–200)</span>
+          <div class="field" id="keep-latest-field">
+            <label class="field__label" for="keep-latest-turns">Keep latest turns (2–200)</label>
             <input
               id="keep-latest-turns"
               type="number"
@@ -57,8 +57,8 @@
               max="200"
               step="1"
             />
-          </label>
-          <p class="subtitle">Changing keep-latest reloads open ChatGPT tabs.</p>
+            <p class="subtitle">Changing keep-latest reloads open ChatGPT tabs.</p>
+          </div>
         </div>
       </details>
 
