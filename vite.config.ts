@@ -18,5 +18,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // Chrome MV3 rejects Vite's <link rel="modulepreload"> for shared chunks
+    // ("cross-world extension resource mismatch"). Scripts still load via import.
+    modulePreload: false,
   },
 });
