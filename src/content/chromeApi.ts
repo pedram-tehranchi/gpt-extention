@@ -8,6 +8,7 @@ export const CONTENT_DEFAULT_SETTINGS: ExtensionSettings = {
   titlePrefixToRemove: '',
   titleBannerEnabled: true,
   autoAllowEnabled: false,
+  conversationRtlEnabled: false,
   pruneOldTurnsEnabled: true,
   keepLatestTurns: 10,
 };

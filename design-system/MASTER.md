@@ -16,7 +16,7 @@ Derived from **ui-ux-pro-max** (AI-Native utility) with a cyan-on-slate palette 
 
 | Surface | Job |
 |---------|-----|
-| **Popup** | Product home: connection status, Auto Allow / prune toggles, keep-N, template count, open settings |
+| **Popup** | Product home: connection status, Auto Allow / Conversation RTL / prune toggles, keep-N, template count, open settings |
 | **Options** | Title banner + prefix, conversation memory, Auto Allow, template CRUD, pinned URL CRUD |
 | **ChatGPT page** | Title pill, `//` template picker, Auto Allow toggle, prune toast, pinned URLs floater |
 
@@ -85,7 +85,7 @@ Do **not** load Google Fonts remotely. Bundle under `public/fonts/` and expose v
 | Picker radius | `12px` |
 | Pills / toggle thumb | `999px` only |
 | Popup width | ~`340px` |
-| Popup density | Compact status chip + one panel: Auto Allow alone; prune + keep-latest grouped |
+| Popup density | Compact status chip + one panel: Auto Allow + Conversation RTL; prune + keep-latest grouped |
 | Options max-width | `640–720px` |
 | Transition | `200ms ease-out` (`--transition`) |
 
@@ -95,7 +95,7 @@ Do **not** load Google Fonts remotely. Bundle under `public/fonts/` and expose v
 
 ```text
 Popup     → brand + status + toggles + keep-N + settings
-Options   → Title | Memory | Auto Allow | Templates | Pinned URLs (collapsible sections, closed by default)
+Options   → Title | Memory | Auto Allow | Conversation RTL | Templates | Pinned URLs (collapsible sections, closed by default)
 ChatGPT   → cyan title pill | cyan Auto Allow | dark picker | cyan pin floater matching options
 ```
 
@@ -106,7 +106,7 @@ ChatGPT   → cyan title pill | cyan Auto Allow | dark picker | cyan pin floater
 ### Popup (product home)
 
 - Show Connected / not (background ping)
-- Instant toggles: Auto Allow (persist immediately)
+- Instant toggles: Auto Allow, Conversation RTL (persist immediately)
 - Prune old messages: persist immediately and reload open ChatGPT tabs (same as keep-latest Apply)
 - Keep-latest control (clamp 2–200); **disabled (inactive appearance) while prune is off**; Apply persists and reloads ChatGPT tabs
 - Template count + path to settings
@@ -114,11 +114,12 @@ ChatGPT   → cyan title pill | cyan Auto Allow | dark picker | cyan pin floater
 
 ### Settings model
 
-- Preference sections (title, memory, Auto Allow, templates, pinned URLs) are **collapsed by default**; expand a section title to edit
-- Title / memory / Auto Allow preferences **auto-save** on change (brief “Saved” status); no Save button
+- Preference sections (title, memory, Auto Allow, Conversation RTL, templates, pinned URLs) are **collapsed by default**; expand a section title to edit
+- Title / memory / Auto Allow / Conversation RTL preferences **auto-save** on change (brief “Saved” status); no Save button
 - Keep-latest in Conversation memory is **disabled while “Remove old messages” is off** (same inactive treatment as popup)
 - Toggling “Remove old messages” or changing keep-latest reloads open ChatGPT tabs
-- Auto Allow must be configurable from options, not only on ChatGPT
+- Auto Allow and Conversation RTL must be configurable from options, not only on ChatGPT
+- Conversation RTL forces assistant/user message roots RTL (`[data-markdown-text-style]`, `[data-user-message-bubble]`, legacy `conversation-turn`) and overrides ChatGPT `dir="auto"` (composer and `dir="ltr"` code stay LTR); live via storage, no tab reload
 - Templates may save on submit; use the same toast language (“Template saved”)
 - Pinned URLs save on submit (`http`/`https` only); same toast language (“Pin saved”)
 - Floater panel can add pins via an “Add pin” control that expands name + URL fields (both required); drag rows to reorder; Options remains full CRUD

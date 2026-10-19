@@ -2,6 +2,7 @@ export interface ExtensionSettings {
   titlePrefixToRemove: string;
   titleBannerEnabled: boolean;
   autoAllowEnabled: boolean;
+  conversationRtlEnabled: boolean;
   pruneOldTurnsEnabled: boolean;
   keepLatestTurns: number;
 }
@@ -13,6 +14,7 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
   titlePrefixToRemove: '',
   titleBannerEnabled: true,
   autoAllowEnabled: false,
+  conversationRtlEnabled: false,
   pruneOldTurnsEnabled: true,
   keepLatestTurns: 10,
 };

@@ -9,7 +9,7 @@ Content scripts injected into supported websites.
 * `index.ts`: Bootstraps the matching site adapter from the registry
 * `chromeApi.ts`: Content-local settings/templates/pins/log via `chrome.storage.local` (no shared SW chunks)
 * `sites/registry.ts`: Site matcher registry
-* `sites/chatgpt/`: ChatGPT adapter — title banner, template trigger, auto allow, message pruner, pinned URLs floater, selectors, composer observer
+* `sites/chatgpt/`: ChatGPT adapter — title banner, template trigger, auto allow, conversation RTL, message pruner, pinned URLs floater, selectors, composer observer
 
 ## Rules
 

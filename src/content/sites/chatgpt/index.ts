@@ -1,4 +1,5 @@
 import { initAutoAllowToggle } from '@/content/sites/chatgpt/autoAllow';
+import { initConversationRtl } from '@/content/sites/chatgpt/conversationRtl';
 import { initMessagePruner } from '@/content/sites/chatgpt/messagePruner';
 import { initPinnedUrls } from '@/content/sites/chatgpt/pinnedUrls';
 import { initTemplateTrigger } from '@/content/sites/chatgpt/templateTrigger';
@@ -60,6 +61,7 @@ export const chatgptAdapter: SiteAdapter = {
         initTemplateTrigger(),
         initAutoAllowToggle(),
         initMessagePruner(),
+        initConversationRtl(),
       ];
       contentLog.info('ChatGPT adapter initialized');
     });

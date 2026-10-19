@@ -25,6 +25,9 @@ const pruneOldTurnsInput = document.getElementById('prune-old-turns') as HTMLInp
 const keepLatestField = document.getElementById('keep-latest-field') as HTMLDivElement;
 const keepLatestTurnsInput = document.getElementById('keep-latest-turns') as HTMLInputElement;
 const autoAllowInput = document.getElementById('auto-allow-enabled') as HTMLInputElement;
+const conversationRtlInput = document.getElementById(
+  'conversation-rtl-enabled',
+) as HTMLInputElement;
 const settingsStatus = document.getElementById('settings-status') as HTMLParagraphElement;
 
 function syncKeepLatestControls(): void {
@@ -88,6 +91,7 @@ async function loadSettings(): Promise<void> {
   keepLatestTurnsInput.value = String(settings.keepLatestTurns);
   loadedKeepLatestTurns = settings.keepLatestTurns;
   autoAllowInput.checked = settings.autoAllowEnabled;
+  conversationRtlInput.checked = settings.conversationRtlEnabled;
   syncKeepLatestControls();
 }
 
@@ -104,6 +108,7 @@ async function persistSettings(options?: { reloadTabsIfKeepChanged?: boolean }):
     pruneOldTurnsEnabled: pruneOldTurnsInput.checked,
     keepLatestTurns,
     autoAllowEnabled: autoAllowInput.checked,
+    conversationRtlEnabled: conversationRtlInput.checked,
   });
 
   keepLatestTurnsInput.value = String(keepLatestTurns);
@@ -420,6 +425,10 @@ pruneOldTurnsInput.addEventListener('change', () => {
 });
 
 autoAllowInput.addEventListener('change', () => {
+  void persistSettings();
+});
+
+conversationRtlInput.addEventListener('change', () => {
   void persistSettings();
 });
 

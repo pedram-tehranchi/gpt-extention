@@ -6,6 +6,7 @@ import { clampKeepLatestTurns } from '@/types/settings';
 
 const statusEl = document.getElementById('status') as HTMLParagraphElement;
 const autoAllowInput = document.getElementById('auto-allow') as HTMLInputElement;
+const conversationRtlInput = document.getElementById('conversation-rtl') as HTMLInputElement;
 const pruneEnabledInput = document.getElementById('prune-enabled') as HTMLInputElement;
 const keepLatestField = document.getElementById('keep-latest-field') as HTMLDivElement;
 const keepLatestInput = document.getElementById('keep-latest') as HTMLInputElement;
@@ -36,6 +37,7 @@ async function checkConnection(): Promise<void> {
 async function loadPopupState(): Promise<void> {
   const [settings, templates] = await Promise.all([getSettings(), getTemplates()]);
   autoAllowInput.checked = settings.autoAllowEnabled;
+  conversationRtlInput.checked = settings.conversationRtlEnabled;
   pruneEnabledInput.checked = settings.pruneOldTurnsEnabled;
   keepLatestInput.value = String(settings.keepLatestTurns);
   syncKeepLatestControls();
@@ -46,6 +48,7 @@ async function loadPopupState(): Promise<void> {
 async function persistPartial(
   patch: Partial<{
     autoAllowEnabled: boolean;
+    conversationRtlEnabled: boolean;
     pruneOldTurnsEnabled: boolean;
     keepLatestTurns: number;
   }>,
@@ -56,6 +59,10 @@ async function persistPartial(
 
 autoAllowInput.addEventListener('change', () => {
   void persistPartial({ autoAllowEnabled: autoAllowInput.checked });
+});
+
+conversationRtlInput.addEventListener('change', () => {
+  void persistPartial({ conversationRtlEnabled: conversationRtlInput.checked });
 });
 
 pruneEnabledInput.addEventListener('change', () => {

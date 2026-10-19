@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Full settings page: title banner, Auto Allow, conversation prune, template CRUD/reorder, and pinned URL CRUD/reorder.
+Full settings page: title banner, Auto Allow, Conversation RTL, conversation prune, template CRUD/reorder, and pinned URL CRUD/reorder.
 
 ## Contains
 
